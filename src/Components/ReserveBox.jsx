@@ -18,7 +18,7 @@ export default function ReserveBox() {
     e.preventDefault();
     //changing database
     const reserveObj = [...reserveTime];
-    const index = reserveObj.findIndex((timeObj) => timeObj.value == value);
+    const index = reserveObj.findIndex((timeObj) => timeObj.value === value);
     const timeObj = { ...reserveObj[index], isChecked: true };
     reserveObj[index] = timeObj;
     //updating ui
@@ -37,12 +37,14 @@ export default function ReserveBox() {
               name="group1"
               label={timeObj.label}
               value={timeObj.value}
-              disabled={timeObj.isChecked}
+              disabled={timeObj.isChecked === true}
             />
           ))}
         </div>
 
-        <button type="submit">Submit</button>
+        <button className="btn btn-primary" type="submit">
+          Reserve your time
+        </button>
       </form>
     </div>
   );
