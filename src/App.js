@@ -5,8 +5,8 @@ import "./App.css";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<ReserveBox />} />
-      <Route path="/test" element={<div>test</div>} />
+      <Route path="*" element={<ReserveBox />} />
+      <Route path="test" element={<div>test</div>} />
     </Routes>
   );
 }
