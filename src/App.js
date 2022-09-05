@@ -1,11 +1,13 @@
 import ReserveBox from "./Components/ReserveBox";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 
 function App() {
   return (
-    <div>
-      <ReserveBox />
-    </div>
+    <Routes>
+      <Route path="/" element={<ReserveBox />} />
+      <Route path="/test" element={<div>test</div>} />
+    </Routes>
   );
 }
 
