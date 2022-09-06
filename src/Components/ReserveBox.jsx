@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { RadioButton, CustomInput } from "./common/Inputs";
+import mongoDbService from "./services/mongoDbService";
 
 export default function ReserveBox() {
   const fakeTimeService = [
@@ -14,7 +15,7 @@ export default function ReserveBox() {
     setReserveTime(fakeTimeService);
   }, []);
 
-  const handleSubmitReserve = (e, value) => {
+  const handleSubmitReserve = async (e, value) => {
     e.preventDefault();
     //changing database
     const reserveObj = [...reserveTime];
@@ -24,6 +25,9 @@ export default function ReserveBox() {
     //updating ui
     setReserveTime(reserveObj);
     console.log(reserveObj);
+    const test = { time: value };
+    const result = await mongoDbService.post(test, "ReservedTimes");
+    console.log(result);
   };
 
   return (
