@@ -10,7 +10,7 @@ function getCollection(db, collection, linkedService = defaultLinkedService) {
 }
 async function insertOne(db, mycollection, data) {
   const collection = getCollection(db, mycollection);
-  await collection.insertOne(data);
+  return await collection.insertOne(data);
 }
 export default {
   getCollection,

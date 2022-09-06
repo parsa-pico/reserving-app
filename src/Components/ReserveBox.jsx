@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { RadioButton, CustomInput } from "./common/Inputs";
-import mongoDbService from "./services/mongoDbService";
 import * as Realm from "realm-web";
 import { app } from "./realmConfig";
-import realmService from "./services/realmService";
-// const {
-//   BSON: { ObjectId },
-// } = Realm;
+import ReserveTimeService from "./services/ReserveTimeService";
+const {
+  BSON: { ObjectId },
+} = Realm;
 export default function ReserveBox() {
   const fakeTimeService = [
     { label: "11", value: "11" },
@@ -30,14 +29,12 @@ export default function ReserveBox() {
     //updating ui
     setReserveTime(reserveObj);
   };
-  // const timeCollection = getCollection("Reserve-App-DB", "ReservedTimes");
-  //console.log(timeCollection);
+
   async function login() {
     const credentials = Realm.Credentials.anonymous();
     const user = await app.logIn(credentials);
-    await realmService.insertOne("Reserve-App-DB", "ReservedTimes", {
-      bemola: true,
-    });
+    const result = await ReserveTimeService.insertNewTime({ midonesti: false });
+    console.log(result);
   }
 
   return (
