@@ -33,7 +33,7 @@ export default function ReserveBox() {
   async function login() {
     const credentials = Realm.Credentials.anonymous();
     const user = await app.logIn(credentials);
-    const result = await ReserveTimeService.insertNewTime({ midonesti: false });
+    const result = await ReserveTimeService.insertNewTime({ hey: false });
     console.log(result);
   }
 
