@@ -16,3 +16,11 @@ export function RadioButton({ id, name, label, ...rest }) {
     </div>
   );
 }
+export function Input({ id, type = " text", ...rest }) {
+  return (
+    <>
+      <label htmlFor={id}>{id}</label>
+      <input id={id} type={type} className="form-control" />
+    </>
+  );
+}

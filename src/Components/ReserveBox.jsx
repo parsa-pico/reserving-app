@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { RadioButton, CustomInput } from "./common/Inputs";
-import * as Realm from "realm-web";
+import { RadioButton, Input } from "./common/Inputs";
 import { app } from "./realmConfig";
 import ReserveTimeService from "./services/ReserveTimeService";
-const {
-  BSON: { ObjectId },
-} = Realm;
+// const {
+//   BSON: { ObjectId },
+// } = Realm;
 export default function ReserveBox() {
-  const fakeTimeService = [
-    { label: "11", value: "11" },
-    { label: "12", value: "12" },
-    { label: "13", value: "13" },
-  ];
+  const [customerDetails, setCustomerDetails] = useState({});
   const [reserveTime, setReserveTime] = useState([]);
   const [checkedTime, setCheckedTime] = useState("");
 
   useEffect(() => {
     const getReserveTime = async () => {
+      if (!app.currentUser) return;
       let reserveDb = await ReserveTimeService.find();
       reserveDb = reserveDb
         .map((timeObj) => {
@@ -30,7 +26,10 @@ export default function ReserveBox() {
     };
     getReserveTime();
   }, []);
-
+  const handleCustomerDetails = (e) => {
+    const { id, value } = e.target;
+    setCustomerDetails((prevState) => ({ ...prevState, [id]: value }));
+  };
   const handleSubmitReserve = async (e, value) => {
     e.preventDefault();
     const selectedTimeInDb = await ReserveTimeService.findOne({ time: value });
@@ -39,19 +38,21 @@ export default function ReserveBox() {
       alert("this time is not available");
       return;
     }
-    await ReserveTimeService.updateOne({ time: value }, { isChecked: true });
+    await ReserveTimeService.updateOne(
+      { time: value },
+      { ...customerDetails, isChecked: true }
+    );
     window.location = "/";
   };
 
-  async function login() {
-    const credentials = Realm.Credentials.anonymous();
-    const user = await app.logIn(credentials);
-    console.log(app.currentUser);
-  }
-
   return (
-    <div>
+    <div className="container">
+      {!app.currentUser && <p>you must login first</p>}
       <form onSubmit={(e) => handleSubmitReserve(e, checkedTime)}>
+        <div onChange={handleCustomerDetails}>
+          <Input id={"firstName"} />
+          <Input id={"lastName"} />
+        </div>
         <div onChange={({ target }) => setCheckedTime(target.value)}>
           {reserveTime.map((timeObj) => (
             <RadioButton
@@ -68,11 +69,6 @@ export default function ReserveBox() {
           Reserve your time
         </button>
       </form>
-      <div>
-        <button onClick={login}>login</button>
-        this is current user:
-        {app.currentUser ? app.currentUser.id : "not logged in"}
-      </div>
     </div>
   );
 }
