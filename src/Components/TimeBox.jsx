@@ -18,7 +18,13 @@ export default function TimeBox() {
       console.log(e);
     }
   };
-
+  const handleResetTimes = async () => {
+    const r = await ReserveTimeService.updateMany(
+      { isChecked: true },
+      { isChecked: false }
+    );
+    console.log(r);
+  };
   return (
     <>
       <form onSubmit={handleFormSubmit}>
@@ -33,6 +39,9 @@ export default function TimeBox() {
           add new time!
         </button>
       </form>
+      <button onClick={handleResetTimes} className="btn btn-secondary">
+        Uncheck all times
+      </button>
     </>
   );
 }

@@ -33,13 +33,14 @@ export default function ReserveBox() {
 
   const handleSubmitReserve = async (e, value) => {
     e.preventDefault();
-    //changing database
-    const reserveObj = [...reserveTime];
-    const index = reserveObj.findIndex((timeObj) => timeObj.value === value);
-    const timeObj = { ...reserveObj[index], isChecked: true };
-    reserveObj[index] = timeObj;
-    //updating ui
-    setReserveTime(reserveObj);
+    const selectedTimeInDb = await ReserveTimeService.findOne({ time: value });
+    console.log(selectedTimeInDb);
+    if (selectedTimeInDb.isChecked === true) {
+      alert("this time is not available");
+      return;
+    }
+    await ReserveTimeService.updateOne({ time: value }, { isChecked: true });
+    window.location = "/";
   };
 
   async function login() {

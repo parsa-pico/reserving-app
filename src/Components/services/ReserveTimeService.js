@@ -1,5 +1,5 @@
 import realmService from "./realmService";
-const dataBase = "Reserve-App-DB";
+//const dataBase = "Reserve-App-DB";
 const collection = "ReservedTimes";
 async function insertNewTime(data) {
   const result = await realmService.insertOne(collection, data);
@@ -16,8 +16,18 @@ async function find(queryObj) {
   // return result;
   return result;
 }
+async function updateOne(queryObj, data) {
+  const result = await realmService.updateOne(collection, queryObj, data);
+  return result;
+}
+async function updateMany(queryObj, data) {
+  const result = await realmService.updateMany(collection, queryObj, data);
+  return result;
+}
 export default {
   insertNewTime,
   findOne,
   find,
+  updateOne,
+  updateMany,
 };
