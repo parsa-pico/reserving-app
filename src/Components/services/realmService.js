@@ -8,11 +8,21 @@ function getCollection(db, collection, linkedService = defaultLinkedService) {
     .db(db)
     .collection(collection);
 }
-async function insertOne(db, mycollection, data) {
+async function insertOne(mycollection, data, db = dataBase) {
   const collection = getCollection(db, mycollection);
   return await collection.insertOne(data);
+}
+async function findOne(mycollection, queryObj, db = dataBase) {
+  const collection = getCollection(db, mycollection);
+  return await collection.findOne(queryObj);
+}
+async function find(mycollection, queryObj, db = dataBase) {
+  const collection = getCollection(db, mycollection);
+  return await collection.find(queryObj);
 }
 export default {
   getCollection,
   insertOne,
+  findOne,
+  find,
 };

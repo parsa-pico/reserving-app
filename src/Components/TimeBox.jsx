@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import realmService from "./services/realmService";
 import ReserveTimeService from "./services/ReserveTimeService";
 export default function TimeBox() {
   const [selectedTime, setSelectedTime] = useState("");
@@ -17,6 +18,7 @@ export default function TimeBox() {
       console.log(e);
     }
   };
+
   return (
     <>
       <form onSubmit={handleFormSubmit}>
@@ -27,7 +29,7 @@ export default function TimeBox() {
             type="text"
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary m-2">
           add new time!
         </button>
       </form>

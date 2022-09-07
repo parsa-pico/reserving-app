@@ -16,7 +16,19 @@ export default function ReserveBox() {
   const [checkedTime, setCheckedTime] = useState("");
 
   useEffect(() => {
-    setReserveTime(fakeTimeService);
+    const getReserveTime = async () => {
+      let reserveDb = await ReserveTimeService.find();
+      reserveDb = reserveDb
+        .map((timeObj) => {
+          const obj = { ...timeObj };
+          obj.value = obj.time;
+          obj.label = obj.time;
+          return obj;
+        })
+        .sort((a, b) => a.value - b.value);
+      setReserveTime(reserveDb);
+    };
+    getReserveTime();
   }, []);
 
   const handleSubmitReserve = async (e, value) => {
@@ -33,6 +45,7 @@ export default function ReserveBox() {
   async function login() {
     const credentials = Realm.Credentials.anonymous();
     const user = await app.logIn(credentials);
+    console.log(app.currentUser);
   }
 
   return (
