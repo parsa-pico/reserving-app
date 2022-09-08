@@ -24,9 +24,15 @@ async function find(mycollection, queryObj, db = dataBase) {
   const collection = getCollection(db, mycollection);
   return await collection.find(queryObj);
 }
-async function updateOne(mycollection, queryObj, data, db = dataBase) {
+async function updateOne(
+  mycollection,
+  queryObj,
+  data,
+  updateType = "set",
+  db = dataBase
+) {
   const collection = getCollection(db, mycollection);
-  return await collection.updateOne(queryObj, { $set: data });
+  return await collection.updateOne(queryObj, data);
 }
 async function updateMany(mycollection, queryObj, data, db = dataBase) {
   const collection = getCollection(db, mycollection);

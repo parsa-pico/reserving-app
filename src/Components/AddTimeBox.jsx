@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import realmService from "./services/realmService";
 import ReserveTimeService from "./services/ReserveTimeService";
-
+import { Input } from "./common/Inputs";
 export default function TimeBox() {
   const [selectedTime, setSelectedTime] = useState("");
+  const [adminName, setAdminName] = useState("");
   const handleTimeSelect = (e) => {
     const { value } = e.target;
     setSelectedTime(value);
@@ -12,34 +13,29 @@ export default function TimeBox() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await ReserveTimeService.insertNewTime({
+      await ReserveTimeService.insertNewTime({
         time: selectedTime,
       });
-      console.log(result);
+      await ReserveTimeService.updateAdmins(adminName);
     } catch (e) {
       console.log(e);
     }
   };
   const handleResetTimes = async () => {
-    const r = await ReserveTimeService.updateMany(
+    await ReserveTimeService.updateMany(
       { isChecked: true },
       { isChecked: false }
     );
   };
-  const test = async () => {
-    // const mongoClinet = new mongodb.MongoClient(mongoClinetUrl);
-    // const r = await mongoClinet.connect();
-    // console.log(r);
-  };
   return (
-    <>
+    <div className="container">
       <form onSubmit={handleFormSubmit}>
         <div className="form-group">
-          <input
-            onChange={handleTimeSelect}
-            className="form-control"
-            type="text"
-          />
+          <Input
+            onChange={({ target }) => setAdminName(target.value)}
+            id="adminName"
+          ></Input>
+          <Input onChange={handleTimeSelect} id="time" />
         </div>
         <button type="submit" className="btn btn-primary m-2">
           add new time!
@@ -48,7 +44,6 @@ export default function TimeBox() {
       <button onClick={handleResetTimes} className="btn btn-secondary">
         Uncheck all times
       </button>
-      <button onClick={() => test}>test</button>
-    </>
+    </div>
   );
 }

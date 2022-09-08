@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { RadioButton, Input } from "./common/Inputs";
 import { app } from "./realmConfig";
 import ReserveTimeService from "./services/ReserveTimeService";
-// const {
-//   BSON: { ObjectId },
-// } = Realm;
+
 export default function ReserveBox() {
   const [customerDetails, setCustomerDetails] = useState({});
   const [reserveTime, setReserveTime] = useState([]);
