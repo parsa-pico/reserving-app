@@ -5,7 +5,7 @@ export default function NavBar() {
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <ul className="navbar-nav">
+        <ul className="navbar-nav p-1">
           <li className="nav-item">
             <NavLink className="nav-link" to="/">
               reserving page
@@ -13,7 +13,7 @@ export default function NavBar() {
           </li>
           <li className="nav-item">
             <NavLink className="nav-link" to="/add-times">
-              adding times
+              add times
             </NavLink>
           </li>
           <li className="nav-item">

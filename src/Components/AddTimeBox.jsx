@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import realmService from "./services/realmService";
 import ReserveTimeService from "./services/ReserveTimeService";
+
 export default function TimeBox() {
   const [selectedTime, setSelectedTime] = useState("");
   const handleTimeSelect = (e) => {
     const { value } = e.target;
     setSelectedTime(value);
   };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -23,7 +25,11 @@ export default function TimeBox() {
       { isChecked: true },
       { isChecked: false }
     );
-    console.log(r);
+  };
+  const test = async () => {
+    // const mongoClinet = new mongodb.MongoClient(mongoClinetUrl);
+    // const r = await mongoClinet.connect();
+    // console.log(r);
   };
   return (
     <>
@@ -42,6 +48,7 @@ export default function TimeBox() {
       <button onClick={handleResetTimes} className="btn btn-secondary">
         Uncheck all times
       </button>
+      <button onClick={() => test}>test</button>
     </>
   );
 }
