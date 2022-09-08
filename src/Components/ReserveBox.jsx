@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { RadioButton, Input } from "./common/Inputs";
 import { app } from "./realmConfig";
+import realmService from "./services/realmService";
 import ReserveTimeService from "./services/ReserveTimeService";
 
 export default function ReserveBox() {
@@ -8,9 +9,10 @@ export default function ReserveBox() {
   const [admins, setAdmins] = useState([]);
   const [reserveTime, setReserveTime] = useState([]);
   const [checkedTime, setCheckedTime] = useState("");
+  const [selectedAdmin, setSelectedAdmin] = useState("");
   const getInfo = async () => {
-    const times = await ReserveTimeService.getReserveTime();
-    setReserveTime(times);
+    // const times = await ReserveTimeService.getReserveTime();
+    // setReserveTime(times);
     const admins = await ReserveTimeService.getAdmins();
     setAdmins(admins);
   };
@@ -35,7 +37,11 @@ export default function ReserveBox() {
     );
     window.location = "/";
   };
-
+  const handleAdminSelect = async ({ target }) => {
+    const { value } = target;
+    const times = await ReserveTimeService.getReserveTime(value);
+    setReserveTime(times);
+  };
   return (
     <div className="container">
       {!app.currentUser && <p>you must login first</p>}
@@ -44,9 +50,15 @@ export default function ReserveBox() {
           <Input id={"firstName"} />
           <Input id={"lastName"} />
         </div>
-        <div>
+        <div onChange={handleAdminSelect}>
           {admins.map((admin) => (
-            <RadioButton key={admin} id={admin} name="group2" label={admin} />
+            <RadioButton
+              key={admin}
+              id={admin}
+              name="group2"
+              label={admin}
+              value={admin}
+            />
           ))}
         </div>
         <div onChange={({ target }) => setCheckedTime(target.value)}>

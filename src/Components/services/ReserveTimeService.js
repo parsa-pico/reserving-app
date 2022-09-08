@@ -18,7 +18,7 @@ async function findOne(queryObj) {
   result._id = result._id.toString();
   return result;
 }
-async function find(queryObj) {
+async function find(collection, queryObj) {
   const result = await realmService.find(collection, queryObj);
   // result._id = result._id.toString();
   // return result;
@@ -48,9 +48,9 @@ async function getAdmins() {
   admins.splice(0, 1);
   return admins;
 }
-const getReserveTime = async () => {
+const getReserveTime = async (collection) => {
   if (!app.currentUser) return;
-  let reserveDb = await find();
+  let reserveDb = await find(collection);
   return reserveDb
     .map((timeObj) => {
       const obj = { ...timeObj };
