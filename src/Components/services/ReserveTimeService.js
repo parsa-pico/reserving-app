@@ -1,5 +1,6 @@
 import realmService from "./realmService";
 import * as Realm from "realm-web";
+import { app } from "../realmConfig";
 const {
   BSON: { ObjectId },
 } = Realm;
@@ -38,6 +39,18 @@ async function updateAdmins(adminName) {
     admins: admins,
   });
 }
+const getReserveTime = async () => {
+  if (!app.currentUser) return;
+  let reserveDb = await find();
+  return reserveDb
+    .map((timeObj) => {
+      const obj = { ...timeObj };
+      obj.value = obj.time;
+      obj.label = obj.time;
+      return obj;
+    })
+    .sort((a, b) => a.value - b.value);
+};
 export default {
   insertNewTime,
   findOne,
@@ -45,4 +58,5 @@ export default {
   updateOne,
   updateMany,
   updateAdmins,
+  getReserveTime,
 };

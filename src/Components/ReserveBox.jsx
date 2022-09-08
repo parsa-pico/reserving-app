@@ -7,22 +7,12 @@ export default function ReserveBox() {
   const [customerDetails, setCustomerDetails] = useState({});
   const [reserveTime, setReserveTime] = useState([]);
   const [checkedTime, setCheckedTime] = useState("");
-
+  const getInfo = async () => {
+    const times = await ReserveTimeService.getReserveTime();
+    setReserveTime(times);
+  };
   useEffect(() => {
-    const getReserveTime = async () => {
-      if (!app.currentUser) return;
-      let reserveDb = await ReserveTimeService.find();
-      reserveDb = reserveDb
-        .map((timeObj) => {
-          const obj = { ...timeObj };
-          obj.value = obj.time;
-          obj.label = obj.time;
-          return obj;
-        })
-        .sort((a, b) => a.value - b.value);
-      setReserveTime(reserveDb);
-    };
-    getReserveTime();
+    getInfo();
   }, []);
   const handleCustomerDetails = (e) => {
     const { id, value } = e.target;
@@ -51,6 +41,7 @@ export default function ReserveBox() {
           <Input id={"firstName"} />
           <Input id={"lastName"} />
         </div>
+
         <div onChange={({ target }) => setCheckedTime(target.value)}>
           {reserveTime.map((timeObj) => (
             <RadioButton
