@@ -9,8 +9,8 @@ const adminsCollection = "config";
 const adminsConfig = {
   _id: ObjectId("6319d2a63fa560fdc5a080be"),
 };
-async function insertNewTime(data) {
-  const result = await realmService.insertOne(collection, data);
+async function insertNewTime(data, myCollection = collection) {
+  const result = await realmService.insertOne(myCollection, data);
   return result.insertedId.toString();
 }
 async function findOne(queryObj) {
@@ -34,10 +34,19 @@ async function updateMany(queryObj, data) {
 }
 async function updateAdmins(adminName) {
   const { admins } = await realmService.findOne(adminsCollection, adminsConfig);
+  if (admins.find((admin) => admin === adminName)) {
+    alert("this admin already exists!");
+    return;
+  }
   admins.push(adminName);
   return await realmService.updateOne(adminsCollection, adminsConfig, {
     admins: admins,
   });
+}
+async function getAdmins() {
+  const { admins } = await realmService.findOne(adminsCollection, adminsConfig);
+  admins.splice(0, 1);
+  return admins;
 }
 const getReserveTime = async () => {
   if (!app.currentUser) return;
@@ -59,4 +68,5 @@ export default {
   updateMany,
   updateAdmins,
   getReserveTime,
+  getAdmins,
 };

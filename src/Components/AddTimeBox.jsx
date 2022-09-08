@@ -13,9 +13,12 @@ export default function TimeBox() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      await ReserveTimeService.insertNewTime({
-        time: selectedTime,
-      });
+      await ReserveTimeService.insertNewTime(
+        {
+          time: selectedTime,
+        },
+        adminName
+      );
       await ReserveTimeService.updateAdmins(adminName);
     } catch (e) {
       console.log(e);
@@ -26,6 +29,9 @@ export default function TimeBox() {
       { isChecked: true },
       { isChecked: false }
     );
+  };
+  const handleAddAdmin = async () => {
+    await ReserveTimeService.updateAdmins(adminName);
   };
   return (
     <div className="container">
@@ -43,6 +49,9 @@ export default function TimeBox() {
       </form>
       <button onClick={handleResetTimes} className="btn btn-secondary">
         Uncheck all times
+      </button>
+      <button onClick={handleAddAdmin} className="btn btn-secondary m-1">
+        add new admin
       </button>
     </div>
   );

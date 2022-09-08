@@ -5,11 +5,14 @@ import ReserveTimeService from "./services/ReserveTimeService";
 
 export default function ReserveBox() {
   const [customerDetails, setCustomerDetails] = useState({});
+  const [admins, setAdmins] = useState([]);
   const [reserveTime, setReserveTime] = useState([]);
   const [checkedTime, setCheckedTime] = useState("");
   const getInfo = async () => {
     const times = await ReserveTimeService.getReserveTime();
     setReserveTime(times);
+    const admins = await ReserveTimeService.getAdmins();
+    setAdmins(admins);
   };
   useEffect(() => {
     getInfo();
@@ -41,7 +44,11 @@ export default function ReserveBox() {
           <Input id={"firstName"} />
           <Input id={"lastName"} />
         </div>
-
+        <div>
+          {admins.map((admin) => (
+            <RadioButton key={admin} id={admin} name="group2" label={admin} />
+          ))}
+        </div>
         <div onChange={({ target }) => setCheckedTime(target.value)}>
           {reserveTime.map((timeObj) => (
             <RadioButton
