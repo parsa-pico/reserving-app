@@ -19,13 +19,13 @@ export default function Login() {
     );
     await app.logIn(credentials);
     setLoginId(user.id);
+    console.log(app.currentUser.customData);
   };
   function handleUserInfo({ target }) {
     setUser((prevState) => ({
       ...prevState,
       [target.id]: target.value,
     }));
-    console.log(user);
   }
   return (
     <div>

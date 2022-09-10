@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import realmService from "./services/realmService";
 import ReserveTimeService from "./services/ReserveTimeService";
 import { Input } from "./common/Inputs";
+import { app } from "./realmConfig";
+const adminCollection = "adminTimes";
 export default function TimeBox() {
   const [selectedTime, setSelectedTime] = useState("");
   const [adminName, setAdminName] = useState("");
+  const [test, setTest] = useState([]);
   const handleTimeSelect = (e) => {
     const { value } = e.target;
     setSelectedTime(value);
@@ -12,14 +15,15 @@ export default function TimeBox() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    const userEmail = app.currentUser.profile.email;
+    const timeObj = {
+      time: selectedTime,
+      ownerId: app.currentUser.id,
+      ownerEmail: userEmail,
+    };
     try {
-      await ReserveTimeService.insertNewTime(
-        {
-          time: selectedTime,
-        },
-        adminName
-      );
-      await ReserveTimeService.updateAdmins(adminName);
+      await ReserveTimeService.insertNewTime(timeObj, adminCollection);
+      // await ReserveTimeService.updateAdmins(adminName);
     } catch (e) {
       console.log(e);
     }
@@ -33,6 +37,7 @@ export default function TimeBox() {
   const handleAddAdmin = async () => {
     await ReserveTimeService.updateAdmins(adminName);
   };
+
   return (
     <div className="container">
       <form onSubmit={handleFormSubmit}>

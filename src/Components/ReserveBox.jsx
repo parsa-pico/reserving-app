@@ -42,6 +42,7 @@ export default function ReserveBox() {
     const times = await ReserveTimeService.getReserveTime(value);
     setReserveTime(times);
   };
+
   return (
     <div className="container">
       {!app.currentUser && <p>you must login first</p>}
