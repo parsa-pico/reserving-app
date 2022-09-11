@@ -6,8 +6,9 @@ const {
 } = Realm;
 const collection = "ReservedTimes";
 const adminsCollection = "config";
+const adminsTimes = "adminTimes";
 const adminsConfig = {
-  _id: ObjectId("6319d2a63fa560fdc5a080be"),
+  _id: ObjectId("631dda00104248fda6639430"),
 };
 async function insertNewTime(data, myCollection = collection) {
   const result = await realmService.insertOne(myCollection, data);
@@ -15,8 +16,11 @@ async function insertNewTime(data, myCollection = collection) {
 }
 async function findOne(queryObj) {
   const result = await realmService.findOne(collection, queryObj);
-  result._id = result._id.toString();
-  return result;
+  if (result) {
+    result._id = result._id.toString();
+    return result;
+  }
+  return null;
 }
 async function find(collection, queryObj) {
   const result = await realmService.find(collection, queryObj);
@@ -45,12 +49,12 @@ async function updateAdmins(adminName) {
 }
 async function getAdmins() {
   const { admins } = await realmService.findOne(adminsCollection, adminsConfig);
-  admins.splice(0, 1);
+
   return admins;
 }
-const getReserveTime = async (collection) => {
+const getReserveTime = async (collection, adminQueryObj) => {
   if (!app.currentUser) return;
-  let reserveDb = await find(collection);
+  let reserveDb = await find(collection, adminQueryObj);
   return reserveDb
     .map((timeObj) => {
       const obj = { ...timeObj };

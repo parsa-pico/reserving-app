@@ -11,8 +11,6 @@ export default function ReserveBox() {
   const [checkedTime, setCheckedTime] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState("");
   const getInfo = async () => {
-    // const times = await ReserveTimeService.getReserveTime();
-    // setReserveTime(times);
     const admins = await ReserveTimeService.getAdmins();
     setAdmins(admins);
   };
@@ -23,25 +21,41 @@ export default function ReserveBox() {
     const { id, value } = e.target;
     setCustomerDetails((prevState) => ({ ...prevState, [id]: value }));
   };
-  const handleSubmitReserve = async (e, value) => {
+  const handleSubmitReserve = async (e, checkedTime) => {
     e.preventDefault();
-    const selectedTimeInDb = await ReserveTimeService.findOne({ time: value });
+    const selectedTimeInDb = await ReserveTimeService.findOne({
+      time: checkedTime,
+    });
     console.log(selectedTimeInDb);
-    if (selectedTimeInDb.isChecked === true) {
+    if (selectedTimeInDb) {
       alert("this time is not available");
       return;
     }
-    await ReserveTimeService.updateOne(
-      { time: value },
-      { ...customerDetails, isChecked: true }
-    );
+    await ReserveTimeService.insertNewTime({
+      ...customerDetails,
+      time: checkedTime,
+    });
     window.location = "/";
   };
   const handleAdminSelect = async ({ target }) => {
-    const { value } = target;
-    const times = await ReserveTimeService.getReserveTime(value);
+    const { value: adminEmail } = target;
+
+    let times = await ReserveTimeService.getReserveTime("adminTimes", {
+      ownerEmail: adminEmail,
+    });
+    times = await AvailableTimes(times);
     setReserveTime(times);
   };
+  async function AvailableTimes(timesObj) {
+    const times = await Promise.all(
+      timesObj.map(async (timeObj) => {
+        const found = await ReserveTimeService.findOne({ time: timeObj.value });
+        if (!found) return timeObj;
+        return { ...timeObj, isChecked: true };
+      })
+    );
+    return times;
+  }
 
   return (
     <div className="container">
@@ -56,7 +70,7 @@ export default function ReserveBox() {
             <RadioButton
               key={admin}
               id={admin}
-              name="group2"
+              name="AdminGroup"
               label={admin}
               value={admin}
             />
@@ -67,7 +81,7 @@ export default function ReserveBox() {
             <RadioButton
               key={timeObj.value}
               id={timeObj.value}
-              name="group1"
+              name="timeGroup"
               label={timeObj.label}
               value={timeObj.value}
               disabled={timeObj.isChecked === true}
