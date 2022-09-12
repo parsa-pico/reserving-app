@@ -38,6 +38,10 @@ async function updateMany(mycollection, queryObj, data, db = dataBase) {
   const collection = getCollection(db, mycollection);
   return await collection.updateMany(queryObj, { $set: data });
 }
+async function deleteOne(mycollection, queryObj, db = dataBase) {
+  const collection = getCollection(db, mycollection);
+  return await collection.deleteOne(queryObj);
+}
 async function deleteMany(mycollection, queryObj, db = dataBase) {
   const collection = getCollection(db, mycollection);
   return await collection.deleteMany(queryObj);
@@ -50,4 +54,5 @@ export default {
   updateOne,
   updateMany,
   deleteMany,
+  deleteOne,
 };

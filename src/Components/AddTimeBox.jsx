@@ -4,6 +4,7 @@ import ReserveTimeService from "./services/ReserveTimeService";
 import { Input } from "./common/Inputs";
 import { app } from "./realmConfig";
 const adminCollection = "adminTimes";
+//TODO:instead of reloading page after operations ,update ui
 export default function TimeBox() {
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedTimeForUpdate, setSelectedTimeForUpdate] = useState("");
@@ -57,6 +58,10 @@ export default function TimeBox() {
     );
     window.location = "/add-times";
   };
+  const handleDelte = async (_id) => {
+    await realmService.deleteOne(adminCollection, { _id });
+    window.location = "/add-times";
+  };
   return (
     <div className="container">
       <form>
@@ -79,9 +84,10 @@ export default function TimeBox() {
       <ul>
         {adminTimes.map((adminTime) => {
           return (
-            <>
+            <div key={adminTime._id}>
               <li key={adminTime.time}>{adminTime.time}</li>
               <button
+                key={adminTime.time + adminTime._id}
                 onClick={() => {
                   setSelectedTimeForUpdate(adminTime.time);
                   setSelectedTime(adminTime.time);
@@ -90,7 +96,14 @@ export default function TimeBox() {
               >
                 edit
               </button>
-            </>
+              <button
+                key={adminTime.time + adminTime._id + 5}
+                onClick={() => handleDelte(adminTime._id)}
+                className="btn btn-danger m-2"
+              >
+                delete
+              </button>
+            </div>
           );
         })}
       </ul>
