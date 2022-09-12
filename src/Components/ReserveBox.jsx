@@ -25,8 +25,8 @@ export default function ReserveBox() {
     e.preventDefault();
     const selectedTimeInDb = await ReserveTimeService.findOne({
       time: checkedTime,
+      adminName: selectedAdmin,
     });
-    console.log(selectedTimeInDb);
     if (selectedTimeInDb) {
       alert("this time is not available");
       return;
@@ -34,26 +34,31 @@ export default function ReserveBox() {
     await ReserveTimeService.insertNewTime({
       ...customerDetails,
       time: checkedTime,
+      adminName: selectedAdmin,
     });
     window.location = "/";
   };
   const handleAdminSelect = async ({ target }) => {
     const { value: adminEmail } = target;
-
+    setSelectedAdmin(adminEmail);
     let times = await ReserveTimeService.getReserveTime("adminTimes", {
       ownerEmail: adminEmail,
     });
-    times = await AvailableTimes(times);
+    times = await AvailableTimes(times, adminEmail);
     setReserveTime(times);
   };
-  async function AvailableTimes(timesObj) {
+  async function AvailableTimes(timesObj, adminProperty) {
     const times = await Promise.all(
       timesObj.map(async (timeObj) => {
-        const found = await ReserveTimeService.findOne({ time: timeObj.value });
+        const found = await ReserveTimeService.findOne({
+          time: timeObj.value,
+          adminName: adminProperty,
+        });
         if (!found) return timeObj;
         return { ...timeObj, isChecked: true };
       })
     );
+
     return times;
   }
 

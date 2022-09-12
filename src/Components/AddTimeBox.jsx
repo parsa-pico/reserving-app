@@ -6,14 +6,27 @@ import { app } from "./realmConfig";
 const adminCollection = "adminTimes";
 export default function TimeBox() {
   const [selectedTime, setSelectedTime] = useState("");
-  const [test, setTest] = useState([]);
+  const [selectedTimeForUpdate, setSelectedTimeForUpdate] = useState("");
+  const [adminTimes, setAdminTimes] = useState([]);
+  const [updateOp, setUpdateOp] = useState(false);
+  useEffect(() => {
+    async function getInfo() {
+      const result = await ReserveTimeService.find(adminCollection, {
+        ownerEmail: app.currentUser.profile.email,
+      });
+
+      setAdminTimes(result);
+    }
+    getInfo();
+  }, []);
+
   const handleTimeSelect = (e) => {
     const { value } = e.target;
     setSelectedTime(value);
   };
-
-  const handleFormSubmit = async (e) => {
+  const handleAddTimes = async (e) => {
     e.preventDefault();
+
     const userEmail = app.currentUser.profile.email;
     const timeObj = {
       time: selectedTime,
@@ -22,6 +35,7 @@ export default function TimeBox() {
     };
     try {
       await ReserveTimeService.insertNewTime(timeObj, adminCollection);
+      window.location = "/add-times";
     } catch (e) {
       console.log(e);
     }
@@ -29,17 +43,57 @@ export default function TimeBox() {
   const handleResetTimes = async () => {
     await realmService.deleteMany("ReservedTimes");
   };
-
+  const handleUpdateTimes = async (e) => {
+    e.preventDefault();
+    console.log(selectedTimeForUpdate);
+    const r = await realmService.updateOne(
+      adminCollection,
+      { time: selectedTimeForUpdate },
+      {
+        time: selectedTime,
+        ownerId: app.currentUser.id,
+        ownerEmail: app.currentUser.profile.email,
+      }
+    );
+    window.location = "/add-times";
+  };
   return (
     <div className="container">
-      <form onSubmit={handleFormSubmit}>
+      <form>
         <div className="form-group">
-          <Input onChange={handleTimeSelect} id="time" />
+          <Input value={selectedTime} onChange={handleTimeSelect} id="time" />
         </div>
-        <button type="submit" className="btn btn-primary m-2">
-          add new time!
+        <button
+          type="submit"
+          onClick={handleAddTimes}
+          className="btn btn-primary m-2"
+        >
+          add
+        </button>
+        <button className="btn btn-primary m-2" onClick={handleUpdateTimes}>
+          update
         </button>
       </form>
+
+      <p>edit times:</p>
+      <ul>
+        {adminTimes.map((adminTime) => {
+          return (
+            <>
+              <li key={adminTime.time}>{adminTime.time}</li>
+              <button
+                onClick={() => {
+                  setSelectedTimeForUpdate(adminTime.time);
+                  setSelectedTime(adminTime.time);
+                }}
+                className="btn btn-danger"
+              >
+                edit
+              </button>
+            </>
+          );
+        })}
+      </ul>
       <button onClick={handleResetTimes} className="btn btn-secondary">
         Uncheck all times
       </button>

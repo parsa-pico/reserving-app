@@ -28,7 +28,7 @@ async function updateOne(
   mycollection,
   queryObj,
   data,
-  updateType = "set",
+  updateType = "$set",
   db = dataBase
 ) {
   const collection = getCollection(db, mycollection);
