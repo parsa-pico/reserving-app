@@ -8,10 +8,10 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 export default function ReserveBox() {
   const [customerDetails, setCustomerDetails] = useState({});
-  const [SelectedDate, setSelectedDate] = useState(new DateObject());
+  const [selectedDate, setSelectedDate] = useState("");
   const [admins, setAdmins] = useState([]);
-  const [reserveTime, setReserveTime] = useState([]);
-  const [checkedTime, setCheckedTime] = useState("");
+  const [adminTimes, setAdminTimes] = useState([]);
+  const [selectedTime, setSelectedTime] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState("");
   const getInfo = async () => {
     const admins = await ReserveTimeService.getAdmins();
@@ -29,6 +29,7 @@ export default function ReserveBox() {
     const selectedTimeInDb = await ReserveTimeService.findOne({
       time: checkedTime,
       adminName: selectedAdmin,
+      date: convertedDate(selectedDate),
     });
     if (selectedTimeInDb) {
       alert("this time is not available");
@@ -38,30 +39,34 @@ export default function ReserveBox() {
       ...customerDetails,
       time: checkedTime,
       adminName: selectedAdmin,
+      date: convertedDate(selectedDate),
     });
     window.location = "/";
   };
   const handleAdminSelect = async ({ target }) => {
     const { value: adminEmail } = target;
     setSelectedAdmin(adminEmail);
-    let times = await ReserveTimeService.getReserveTime("adminTimes", {
+    const times = await ReserveTimeService.getReserveTime("adminTimes", {
       ownerEmail: adminEmail,
     });
-    times = await AvailableTimes(times, adminEmail);
-    setReserveTime(times);
+    setSelectedDate("");
+    setSelectedTime("");
+    setAdminTimes(times);
   };
-  async function AvailableTimes(timesObj, adminProperty) {
+  async function AvailableTimes(timesObj, adminProperty, date) {
     const times = await Promise.all(
       timesObj.map(async (timeObj) => {
         const found = await ReserveTimeService.findOne({
           time: timeObj.value,
           adminName: adminProperty,
+          date: date,
         });
-        if (!found) return timeObj;
+        if (!found) return { ...timeObj, isChecked: false };
+
         return { ...timeObj, isChecked: true };
       })
     );
-
+    console.log(times);
     return times;
   }
   function convertedDate(dateObj) {
@@ -69,11 +74,21 @@ export default function ReserveBox() {
     const month = dateObj.month.number;
     return `${year}/${month}/${day}`;
   }
-  console.log(convertedDate(SelectedDate));
+
+  async function handleDateSelect(date) {
+    const times = await AvailableTimes(
+      adminTimes,
+      selectedAdmin,
+      convertedDate(date)
+    );
+
+    setAdminTimes(times);
+    setSelectedDate(date);
+  }
   return (
     <div className="container">
       {!app.currentUser && <p>you must login first</p>}
-      <form onSubmit={(e) => handleSubmitReserve(e, checkedTime)}>
+      <form onSubmit={(e) => handleSubmitReserve(e, selectedTime)}>
         <div onChange={handleCustomerDetails}>
           <Input id={"firstName"} />
           <Input id={"lastName"} />
@@ -89,26 +104,41 @@ export default function ReserveBox() {
             />
           ))}
         </div>
-        <DatePicker
-          minDate={Date.now()}
-          calendar={persian}
-          locale={persian_fa}
-          value={SelectedDate}
-          onChange={(value) => setSelectedDate(value)}
-        />
-        <div onChange={({ target }) => setCheckedTime(target.value)}>
-          {reserveTime.map((timeObj) => (
-            <RadioButton
-              key={timeObj.value}
-              id={timeObj.value}
-              name="timeGroup"
-              label={timeObj.label}
-              value={timeObj.value}
-              disabled={timeObj.isChecked === true}
-            />
-          ))}
+        {selectedAdmin && (
+          <DatePicker
+            minDate={Date.now()}
+            calendar={persian}
+            locale={persian_fa}
+            value={selectedDate}
+            onChange={(value) => {
+              handleDateSelect(value);
+            }}
+          />
+        )}
+        <div onChange={({ target }) => setSelectedTime(target.value)}>
+          {selectedDate &&
+            adminTimes.map((timeObj) => (
+              <RadioButton
+                key={timeObj.value}
+                id={timeObj.value}
+                name="timeGroup"
+                label={timeObj.label}
+                value={timeObj.value}
+                disabled={timeObj.isChecked === true}
+              />
+            ))}
         </div>
-        <button className="btn btn-primary" type="submit">
+        <button
+          disabled={
+            !customerDetails.firstName ||
+            !customerDetails.lastName ||
+            !selectedAdmin ||
+            !selectedDate ||
+            !selectedTime
+          }
+          className="btn btn-primary"
+          type="submit"
+        >
           Reserve your time
         </button>
       </form>
