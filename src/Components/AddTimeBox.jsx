@@ -6,6 +6,7 @@ import { app } from "./realmConfig";
 const adminCollection = "adminTimes";
 //TODO:instead of reloading page after operations ,update ui
 export default function TimeBox() {
+  const [errors, setErrors] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedTimeForUpdate, setSelectedTimeForUpdate] = useState("");
   const [adminTimes, setAdminTimes] = useState([]);
@@ -39,6 +40,10 @@ export default function TimeBox() {
       window.location = "/add-times";
     } catch (e) {
       console.log(e);
+      setErrors((prevState) => ({
+        ...prevState,
+        addTimes: "you dont have that premission",
+      }));
     }
   };
   const handleResetTimes = async () => {
@@ -66,7 +71,12 @@ export default function TimeBox() {
     <div className="container">
       <form>
         <div className="form-group">
-          <Input value={selectedTime} onChange={handleTimeSelect} id="time" />
+          <Input
+            value={selectedTime}
+            onChange={handleTimeSelect}
+            error={errors.addTimes}
+            id="time"
+          />
         </div>
         <button
           type="submit"

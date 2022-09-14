@@ -3,9 +3,12 @@ import { RadioButton, Input } from "./common/Inputs";
 import { app } from "./realmConfig";
 import realmService from "./services/realmService";
 import ReserveTimeService from "./services/ReserveTimeService";
-
+import DatePicker, { DateObject } from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
 export default function ReserveBox() {
   const [customerDetails, setCustomerDetails] = useState({});
+  const [SelectedDate, setSelectedDate] = useState(new DateObject());
   const [admins, setAdmins] = useState([]);
   const [reserveTime, setReserveTime] = useState([]);
   const [checkedTime, setCheckedTime] = useState("");
@@ -61,7 +64,12 @@ export default function ReserveBox() {
 
     return times;
   }
-
+  function convertedDate(dateObj) {
+    const { day, year } = dateObj;
+    const month = dateObj.month.number;
+    return `${year}/${month}/${day}`;
+  }
+  console.log(convertedDate(SelectedDate));
   return (
     <div className="container">
       {!app.currentUser && <p>you must login first</p>}
@@ -81,6 +89,13 @@ export default function ReserveBox() {
             />
           ))}
         </div>
+        <DatePicker
+          minDate={Date.now()}
+          calendar={persian}
+          locale={persian_fa}
+          value={SelectedDate}
+          onChange={(value) => setSelectedDate(value)}
+        />
         <div onChange={({ target }) => setCheckedTime(target.value)}>
           {reserveTime.map((timeObj) => (
             <RadioButton
