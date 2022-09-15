@@ -21,7 +21,7 @@ export default function ReserveBox() {
     }
     const credentials = Realm.Credentials.apiKey(process.env.REACT_APP_API_KEY);
     app.logIn(credentials);
-    console.log(app.currentUser);
+    console.log(process.env);
   };
   useEffect(() => {
     getInfo();
