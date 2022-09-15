@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { app } from "./realmConfig";
 
 export default function NavBar() {
   return (
@@ -21,16 +22,20 @@ export default function NavBar() {
               Login
             </NavLink>
           </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/logout">
-              Logout
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/register">
-              Register
-            </NavLink>
-          </li>
+          {app.currentUser && (
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/logout">
+                Logout
+              </NavLink>
+            </li>
+          )}
+          {!app.currentUser && (
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/register">
+                Register
+              </NavLink>
+            </li>
+          )}
         </ul>
       </nav>
     </div>
