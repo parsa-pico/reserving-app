@@ -10,7 +10,8 @@ export default function Register() {
     const { value, id } = target;
     setUserInfo((prevState) => ({ ...prevState, [id]: value }));
   };
-  const handleRegister = async (e) => {
+  // TODO: make loading message programatic
+  async function handleRegister(e) {
     e.preventDefault();
     try {
       setFlag(true);
@@ -24,7 +25,7 @@ export default function Register() {
       setFlag(false);
       setResult(e.message);
     }
-  };
+  }
 
   return (
     <div>
