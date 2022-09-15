@@ -90,8 +90,12 @@ export default function ReserveBox() {
     setAdminTimes(times);
     setSelectedDate(date);
   }
+  function handleTest() {
+    console.log("hi");
+  }
   return (
     <div className="container">
+      <button onClick={handleTest}>test</button>
       {!app.currentUser && <p>you must login first</p>}
       <form onSubmit={(e) => handleSubmitReserve(e, selectedTime)}>
         <div onChange={handleCustomerDetails}>
