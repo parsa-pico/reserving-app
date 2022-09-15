@@ -36,6 +36,13 @@ export default function NavBar() {
               </NavLink>
             </li>
           )}
+          {app.currentUser && (
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/profile">
+                {app.currentUser.profile.email}
+              </NavLink>
+            </li>
+          )}
         </ul>
       </nav>
     </div>

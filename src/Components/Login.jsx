@@ -5,11 +5,6 @@ import { app } from "./realmConfig";
 export default function Login() {
   const [loginId, setLoginId] = useState("");
   const [user, setUser] = useState({});
-  async function loginAnonymous() {
-    const credentials = Realm.Credentials.anonymous();
-    const user = await app.logIn(credentials);
-    setLoginId(user.id);
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,9 +12,12 @@ export default function Login() {
       user.email,
       user.password
     );
-    await app.logIn(credentials);
-    setLoginId(user.id);
-    console.log(app.currentUser.customData);
+    try {
+      await app.logIn(credentials);
+      window.location = "/";
+    } catch (error) {
+      alert(error);
+    }
   };
   function handleUserInfo({ target }) {
     setUser((prevState) => ({
@@ -38,14 +36,6 @@ export default function Login() {
           Login
         </button>
       </form>
-      <p>Or</p>
-      <div className="m-1">
-        <div>
-          this is current user:
-          {app.currentUser ? app.currentUser.id : "not logged in"}
-          {app.currentUser && <p>{app.currentUser.providerType}</p>}
-        </div>
-      </div>
     </div>
   );
 }
