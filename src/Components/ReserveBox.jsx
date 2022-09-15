@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { RadioButton, Input } from "./common/Inputs";
 import { app } from "./realmConfig";
+import * as Realm from "realm-web";
 import realmService from "./services/realmService";
 import ReserveTimeService from "./services/ReserveTimeService";
 import DatePicker, { DateObject } from "react-multi-date-picker";
@@ -18,6 +19,9 @@ export default function ReserveBox() {
       const admins = await ReserveTimeService.getAdmins();
       setAdmins(admins);
     }
+    const credentials = Realm.Credentials.apiKey(process.env.REACT_APP_API_KEY);
+    app.logIn(credentials);
+    console.log(app.currentUser);
   };
   useEffect(() => {
     getInfo();

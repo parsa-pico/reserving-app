@@ -1,6 +1,6 @@
 import React from "react";
 import { app } from "./../realmConfig";
-
+// TODO: make condition dynamic
 export default function ProtectedRoute({ children }) {
   const user = app.currentUser;
   if (user && user.customData && user.customData.isAdmin === true)
