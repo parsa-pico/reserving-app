@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import { app } from "./realmConfig";
 
 export default function NavBar() {
+  const user = app.currentUser;
+  // const { isAdmin } = user.customData;
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -12,34 +14,38 @@ export default function NavBar() {
               reserving page
             </NavLink>
           </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/add-times">
-              add times
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/login">
-              Login
-            </NavLink>
-          </li>
-          {app.currentUser && (
+          {user && user.customData && user.customData.isAdmin === true && (
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/add-times">
+                add times
+              </NavLink>
+            </li>
+          )}
+          {!user && (
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/login">
+                Login
+              </NavLink>
+            </li>
+          )}
+          {user && (
             <li className="nav-item">
               <NavLink className="nav-link" to="/logout">
                 Logout
               </NavLink>
             </li>
           )}
-          {!app.currentUser && (
+          {!user && (
             <li className="nav-item">
               <NavLink className="nav-link" to="/register">
                 Register
               </NavLink>
             </li>
           )}
-          {app.currentUser && (
+          {user && (
             <li className="nav-item">
               <NavLink className="nav-link" to="/profile">
-                {app.currentUser.profile.email}
+                {user.profile.email}
               </NavLink>
             </li>
           )}
