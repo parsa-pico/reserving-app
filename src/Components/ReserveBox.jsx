@@ -14,8 +14,10 @@ export default function ReserveBox() {
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState("");
   const getInfo = async () => {
-    const admins = await ReserveTimeService.getAdmins();
-    setAdmins(admins);
+    if (app.currentUser) {
+      const admins = await ReserveTimeService.getAdmins();
+      setAdmins(admins);
+    }
   };
   useEffect(() => {
     getInfo();

@@ -19,7 +19,7 @@ export default function TimeBox() {
 
       setAdminTimes(result);
     }
-    getInfo();
+    if (app.currentUser) getInfo();
   }, []);
 
   const handleTimeSelect = (e) => {

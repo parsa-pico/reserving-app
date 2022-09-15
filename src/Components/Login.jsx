@@ -40,9 +40,6 @@ export default function Login() {
       </form>
       <p>Or</p>
       <div className="m-1">
-        <button className="btn btn-secondary" onClick={loginAnonymous}>
-          login anonymously
-        </button>
         <div>
           this is current user:
           {app.currentUser ? app.currentUser.id : "not logged in"}
