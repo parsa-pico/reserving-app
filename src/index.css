@@ -15,3 +15,11 @@ div[disabled] {
   pointer-events: none;
   opacity: 0.3;
 }
+.hyperLink {
+  color: darkorange;
+  display: inline-block;
+}
+.hyperLink:hover {
+  cursor: pointer;
+  color: coral;
+}

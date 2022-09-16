@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { RadioButton, Input } from "./common/Inputs";
 import { app } from "./realmConfig";
 import * as Realm from "realm-web";
-import realmService from "./services/realmService";
 import ReserveTimeService from "./services/ReserveTimeService";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+import { isNormalUser, isServerUser, isUser } from "./common/UserControl";
 export default function ReserveBox() {
   const [customerDetails, setCustomerDetails] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
@@ -19,8 +19,6 @@ export default function ReserveBox() {
       const admins = await ReserveTimeService.getAdmins();
       setAdmins(admins);
     }
-    const credentials = Realm.Credentials.apiKey(process.env.REACT_APP_API_KEY);
-    app.logIn(credentials);
   };
   useEffect(() => {
     getInfo();
@@ -90,18 +88,26 @@ export default function ReserveBox() {
     setAdminTimes(times);
     setSelectedDate(date);
   }
-  function handleTest() {
-    console.log("hi");
+  async function handleApiLogin() {
+    const credentials = Realm.Credentials.apiKey(process.env.REACT_APP_API_KEY);
+    await app.logIn(credentials);
+    window.location = "/";
   }
+
   return (
     <div className="container">
-      <button onClick={handleTest}>test</button>
-      {!app.currentUser && <p>you must login first</p>}
+      {!isNormalUser() && <p>you must login to reserve your time</p>}
       <form onSubmit={(e) => handleSubmitReserve(e, selectedTime)}>
         <div onChange={handleCustomerDetails}>
           <Input id={"firstName"} />
           <Input id={"lastName"} />
         </div>
+        {!isUser() && (
+          <h5 className="hyperLink" onClick={handleApiLogin}>
+            see times...
+          </h5>
+        )}
+
         <div onChange={handleAdminSelect}>
           {admins.map((admin) => (
             <RadioButton
@@ -143,7 +149,8 @@ export default function ReserveBox() {
             !customerDetails.lastName ||
             !selectedAdmin ||
             !selectedDate ||
-            !selectedTime
+            !selectedTime ||
+            app.currentUser._profile.type !== "normal"
           }
           className="btn btn-primary"
           type="submit"
