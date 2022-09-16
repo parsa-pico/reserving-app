@@ -15,10 +15,11 @@ export default function Register() {
     e.preventDefault();
     try {
       setFlag(true);
-      await app.emailPasswordAuth.registerUser(
+      const result = await app.emailPasswordAuth.registerUser(
         userInfo.email,
         userInfo.password
       );
+      console.log(result);
       setFlag(false);
       setResult("please check your email");
     } catch (e) {

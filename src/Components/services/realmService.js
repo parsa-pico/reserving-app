@@ -28,11 +28,17 @@ async function updateOne(
   mycollection,
   queryObj,
   data,
-  updateType = "$set",
+  upsert = false,
   db = dataBase
 ) {
   const collection = getCollection(db, mycollection);
-  return await collection.updateOne(queryObj, data);
+  return await collection.updateOne(
+    queryObj,
+    { $set: data },
+    {
+      upsert,
+    }
+  );
 }
 async function updateMany(mycollection, queryObj, data, db = dataBase) {
   const collection = getCollection(db, mycollection);

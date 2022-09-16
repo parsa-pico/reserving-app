@@ -6,9 +6,10 @@ import Login from "./Components/Login";
 import LogOut from "./Components/LogOut";
 import Register from "./Components/Register";
 import ConfirmEmail from "./Components/ConfirmEmail";
-import "./App.css";
 import NotFound from "./Components/NotFound";
 import ProtectedRoute from "./Components/common/ProtectedRoute";
+import Profile from "./Components/Profile";
+import "./App.css";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="logout" element={<LogOut />} />
         <Route path="register" element={<Register />} />
         <Route path="register/confirmUser" element={<ConfirmEmail />} />
+        <Route path="profile" element={<Profile />} />
         <Route path="notFound" element={<NotFound />} />
         <Route path="*" element={<Navigate to="notFound" />} />
       </Routes>

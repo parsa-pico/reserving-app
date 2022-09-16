@@ -5,6 +5,7 @@ const {
   BSON: { ObjectId },
 } = Realm;
 const collection = "ReservedTimes";
+const userCustomDataCollection = "userCustomData";
 const adminsCollection = "config";
 const adminsTimes = "adminTimes";
 const adminsConfig = {
@@ -14,8 +15,8 @@ async function insertNewTime(data, myCollection = collection) {
   const result = await realmService.insertOne(myCollection, data);
   return result.insertedId.toString();
 }
-async function findOne(queryObj) {
-  const result = await realmService.findOne(collection, queryObj);
+async function findOne(queryObj, myCollection = collection) {
+  const result = await realmService.findOne(myCollection, queryObj);
   if (result) {
     result._id = result._id.toString();
     return result;
@@ -64,6 +65,31 @@ const getReserveTime = async (collection, adminQueryObj) => {
     })
     .sort((a, b) => a.value - b.value);
 };
+async function addUserCustomData(data) {
+  return await realmService.insertOne(userCustomDataCollection, {
+    ...data,
+    userId: app.currentUser.id,
+  });
+}
+async function upsertUserCustomData(data) {
+  return await realmService.updateOne(
+    userCustomDataCollection,
+    { userId: app.currentUser.id },
+    {
+      ...data,
+      userId: app.currentUser.id,
+    },
+    true
+  );
+}
+async function getUserCustomDataWithSearch() {
+  return await findOne(
+    {
+      userId: app.currentUser.id,
+    },
+    userCustomDataCollection
+  );
+}
 export default {
   insertNewTime,
   findOne,
@@ -73,4 +99,7 @@ export default {
   updateAdmins,
   getReserveTime,
   getAdmins,
+  addUserCustomData,
+  upsertUserCustomData,
+  getUserCustomDataWithSearch,
 };

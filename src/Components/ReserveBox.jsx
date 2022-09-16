@@ -7,6 +7,7 @@ import DatePicker, { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { isNormalUser, isServerUser, isUser } from "./common/UserControl";
+const userCustomDataCollection = "userCustomData";
 export default function ReserveBox() {
   const [customerDetails, setCustomerDetails] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
@@ -14,18 +15,26 @@ export default function ReserveBox() {
   const [adminTimes, setAdminTimes] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState("");
-  const getInfo = async () => {
-    if (app.currentUser) {
-      const admins = await ReserveTimeService.getAdmins();
-      setAdmins(admins);
-    }
+  const getAdminNames = async () => {
+    const admins = await ReserveTimeService.getAdmins();
+    setAdmins(admins);
   };
+  async function getUserInfo() {
+    const { firstName, lastName } =
+      await ReserveTimeService.getUserCustomDataWithSearch();
+
+    setCustomerDetails({ firstName, lastName });
+  }
   useEffect(() => {
-    getInfo();
+    if (app.currentUser) {
+      getAdminNames();
+      getUserInfo();
+    }
   }, []);
   const handleCustomerDetails = (e) => {
     const { id, value } = e.target;
     setCustomerDetails((prevState) => ({ ...prevState, [id]: value }));
+    console.log(customerDetails);
   };
   const handleSubmitReserve = async (e, checkedTime) => {
     e.preventDefault();
@@ -101,8 +110,8 @@ export default function ReserveBox() {
       )}
       <form onSubmit={(e) => handleSubmitReserve(e, selectedTime)}>
         <div onChange={handleCustomerDetails}>
-          <Input id={"firstName"} />
-          <Input id={"lastName"} />
+          <Input value={customerDetails.firstName} id={"firstName"} />
+          <Input value={customerDetails.lastName} id={"lastName"} />
         </div>
         {!isUser() && (
           <h5 className="hyperLink" onClick={handleApiLogin}>
