@@ -26,10 +26,8 @@ export default function ReserveBox() {
     setCustomerDetails({ firstName, lastName });
   }
   useEffect(() => {
-    if (app.currentUser) {
-      getAdminNames();
-      getUserInfo();
-    }
+    if (isUser()) getAdminNames();
+    if (isNormalUser()) getUserInfo();
   }, []);
   const handleCustomerDetails = (e) => {
     const { id, value } = e.target;
