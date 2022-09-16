@@ -69,7 +69,7 @@ export default function ReserveBox() {
         return { ...timeObj, isChecked: true };
       })
     );
-    console.log(times);
+
     return times;
   }
   function convertedDate(dateObj) {
@@ -96,7 +96,9 @@ export default function ReserveBox() {
 
   return (
     <div className="container">
-      {!isNormalUser() && <p>you must login to reserve your time</p>}
+      {!isNormalUser() && (
+        <p className="text-danger">you must login to reserve your time</p>
+      )}
       <form onSubmit={(e) => handleSubmitReserve(e, selectedTime)}>
         <div onChange={handleCustomerDetails}>
           <Input id={"firstName"} />
