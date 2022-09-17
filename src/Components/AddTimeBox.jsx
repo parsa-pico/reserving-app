@@ -8,7 +8,9 @@ const adminCollection = "adminTimes";
 export default function TimeBox() {
   const [errors, setErrors] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
+  const [selectedDay, setSelectedDay] = useState("");
   const [selectedTimeForUpdate, setSelectedTimeForUpdate] = useState("");
+  const [selectedDayForUpdate, setSelectedDayForUpdate] = useState("");
   const [adminTimes, setAdminTimes] = useState([]);
   const [updateOp, setUpdateOp] = useState(false);
   useEffect(() => {
@@ -34,6 +36,7 @@ export default function TimeBox() {
       time: selectedTime,
       ownerId: app.currentUser.id,
       ownerEmail: userEmail,
+      dayIndex: selectedDay,
     };
     try {
       await ReserveTimeService.insertNewTime(timeObj, adminCollection);
@@ -51,12 +54,13 @@ export default function TimeBox() {
   };
   const handleUpdateTimes = async (e) => {
     e.preventDefault();
-    console.log(selectedTimeForUpdate);
+
     const r = await realmService.updateOne(
       adminCollection,
-      { time: selectedTimeForUpdate },
+      { time: selectedTimeForUpdate, dayIndex: selectedDayForUpdate },
       {
         time: selectedTime,
+        dayIndex: selectedDay,
         ownerId: app.currentUser.id,
         ownerEmail: app.currentUser.profile.email,
       }
@@ -76,18 +80,31 @@ export default function TimeBox() {
             onChange={handleTimeSelect}
             error={errors.addTimes}
             id="time"
+            autoFocus
+          />
+          <Input
+            value={selectedDay}
+            onChange={(e) => {
+              const { value } = e.target;
+              setSelectedDay(value);
+            }}
+            id="day"
           />
         </div>
-        <button
-          type="submit"
-          onClick={handleAddTimes}
-          className="btn btn-primary m-2"
-        >
-          add
-        </button>
-        <button className="btn btn-primary m-2" onClick={handleUpdateTimes}>
-          update
-        </button>
+        {!updateOp && (
+          <button
+            type="submit"
+            onClick={handleAddTimes}
+            className="btn btn-primary m-2"
+          >
+            add
+          </button>
+        )}
+        {updateOp && (
+          <button className="btn btn-primary m-2" onClick={handleUpdateTimes}>
+            update
+          </button>
+        )}
       </form>
 
       <p>edit times:</p>
@@ -95,24 +112,30 @@ export default function TimeBox() {
         {adminTimes.map((adminTime) => {
           return (
             <div key={adminTime._id}>
-              <li key={adminTime.time}>{adminTime.time}</li>
-              <button
-                key={adminTime.time + adminTime._id}
-                onClick={() => {
-                  setSelectedTimeForUpdate(adminTime.time);
-                  setSelectedTime(adminTime.time);
-                }}
-                className="btn btn-danger"
-              >
-                edit
-              </button>
-              <button
-                key={adminTime.time + adminTime._id + 5}
-                onClick={() => handleDelte(adminTime._id)}
-                className="btn btn-danger m-2"
-              >
-                delete
-              </button>
+              <li key={adminTime.time}>
+                <h6>time:{adminTime.time}</h6>
+                <h6>day:{adminTime.dayIndex}</h6>
+                <button
+                  key={adminTime.time + adminTime._id}
+                  onClick={() => {
+                    setSelectedTimeForUpdate(adminTime.time);
+                    setSelectedDayForUpdate(adminTime.dayIndex);
+                    setSelectedTime(adminTime.time);
+                    setSelectedDay(adminTime.dayIndex);
+                    setUpdateOp(true);
+                  }}
+                  className="btn btn-danger"
+                >
+                  edit
+                </button>
+                <button
+                  key={adminTime.time + adminTime._id + 5}
+                  onClick={() => handleDelte(adminTime._id)}
+                  className="btn btn-danger m-2"
+                >
+                  delete
+                </button>
+              </li>
             </div>
           );
         })}

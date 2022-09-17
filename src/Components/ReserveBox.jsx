@@ -11,6 +11,7 @@ const userCustomDataCollection = "userCustomData";
 export default function ReserveBox() {
   const [customerDetails, setCustomerDetails] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDayIndex, setSelectedDayIndex] = useState("");
   const [admins, setAdmins] = useState([]);
   const [adminTimes, setAdminTimes] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
@@ -37,22 +38,30 @@ export default function ReserveBox() {
   };
   const handleSubmitReserve = async (e, checkedTime) => {
     e.preventDefault();
-    const selectedTimeInDb = await ReserveTimeService.findOne({
-      time: checkedTime,
-      adminEmail: selectedAdmin.email,
-      date: convertedDate(selectedDate),
-    });
-    if (selectedTimeInDb) {
-      alert("this time is not available");
+    // const selectedTimeInDb = await ReserveTimeService.findOne({
+    //   time: checkedTime,
+    //   adminEmail: selectedAdmin.email,
+    //   date: convertedDate(selectedDate),
+    // });
+    // if (selectedTimeInDb) {
+    //   alert("this time is not available");
+    //   return;
+    // }
+
+    try {
+      await ReserveTimeService.insertNewTime({
+        ...customerDetails,
+        adminName: selectedAdmin.name,
+        adminEmail: selectedAdmin.email,
+        date: convertedDate(selectedDate),
+        dayIndex: selectedDayIndex,
+        time: checkedTime,
+      });
+    } catch (e) {
+      alert(e);
+      console.log(e);
       return;
     }
-    await ReserveTimeService.insertNewTime({
-      ...customerDetails,
-      time: checkedTime,
-      adminName: selectedAdmin.name,
-      adminEmail: selectedAdmin.email,
-      date: convertedDate(selectedDate),
-    });
     window.location = "/";
   };
   const handleAdminSelect = async ({ target }) => {
@@ -71,9 +80,8 @@ export default function ReserveBox() {
         const found = await ReserveTimeService.findOne({
           time: timeObj.value,
           adminEmail: adminProperty,
-          date: date,
+          date,
         });
-
         if (!found) return { ...timeObj, isChecked: false };
 
         return { ...timeObj, isChecked: true };
@@ -96,7 +104,7 @@ export default function ReserveBox() {
       selectedAdmin.email,
       convertedDate(date)
     );
-
+    setSelectedDayIndex(date.weekDay.index.toString());
     setAdminTimes(times);
     setSelectedDate(date);
   }
@@ -146,16 +154,18 @@ export default function ReserveBox() {
         )}
         <div onChange={({ target }) => setSelectedTime(target.value)}>
           {selectedDate &&
-            adminTimes.map((timeObj) => (
-              <RadioButton
-                key={timeObj.value}
-                id={timeObj.value}
-                name="timeGroup"
-                label={timeObj.label}
-                value={timeObj.value}
-                disabled={timeObj.isChecked === true}
-              />
-            ))}
+            adminTimes
+              .filter((timeObj) => timeObj.dayIndex === selectedDayIndex)
+              .map((timeObj) => (
+                <RadioButton
+                  key={timeObj.value}
+                  id={timeObj.value}
+                  name="timeGroup"
+                  label={timeObj.label}
+                  value={timeObj.value}
+                  disabled={timeObj.isChecked === true}
+                />
+              ))}
         </div>
         <button
           disabled={
