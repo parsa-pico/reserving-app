@@ -17,6 +17,7 @@ export default function ReserveBox() {
   const [selectedAdmin, setSelectedAdmin] = useState("");
   const getAdminNames = async () => {
     const admins = await ReserveTimeService.getAdmins();
+
     setAdmins(admins);
   };
   async function getUserInfo() {
@@ -33,13 +34,12 @@ export default function ReserveBox() {
   const handleCustomerDetails = (e) => {
     const { id, value } = e.target;
     setCustomerDetails((prevState) => ({ ...prevState, [id]: value }));
-    console.log(customerDetails);
   };
   const handleSubmitReserve = async (e, checkedTime) => {
     e.preventDefault();
     const selectedTimeInDb = await ReserveTimeService.findOne({
       time: checkedTime,
-      adminName: selectedAdmin,
+      adminEmail: selectedAdmin.email,
       date: convertedDate(selectedDate),
     });
     if (selectedTimeInDb) {
@@ -49,14 +49,15 @@ export default function ReserveBox() {
     await ReserveTimeService.insertNewTime({
       ...customerDetails,
       time: checkedTime,
-      adminName: selectedAdmin,
+      adminName: selectedAdmin.name,
+      adminEmail: selectedAdmin.email,
       date: convertedDate(selectedDate),
     });
     window.location = "/";
   };
   const handleAdminSelect = async ({ target }) => {
-    const { value: adminEmail } = target;
-    setSelectedAdmin(adminEmail);
+    const { value: adminEmail, id: adminName } = target;
+    setSelectedAdmin({ email: adminEmail, name: adminName });
     const times = await ReserveTimeService.getReserveTime("adminTimes", {
       ownerEmail: adminEmail,
     });
@@ -69,9 +70,10 @@ export default function ReserveBox() {
       timesObj.map(async (timeObj) => {
         const found = await ReserveTimeService.findOne({
           time: timeObj.value,
-          adminName: adminProperty,
+          adminEmail: adminProperty,
           date: date,
         });
+
         if (!found) return { ...timeObj, isChecked: false };
 
         return { ...timeObj, isChecked: true };
@@ -85,14 +87,13 @@ export default function ReserveBox() {
     let month = dateObj.month.number;
     if (day.toString().length === 1) day = `0${day}`;
     if (month.toString().length === 1) month = `0${month}`;
-    console.log(day, month);
     return `${year}/${month}/${day}`;
   }
 
   async function handleDateSelect(date) {
     const times = await AvailableTimes(
       adminTimes,
-      selectedAdmin,
+      selectedAdmin.email,
       convertedDate(date)
     );
 
@@ -124,11 +125,11 @@ export default function ReserveBox() {
         <div onChange={handleAdminSelect}>
           {admins.map((admin) => (
             <RadioButton
-              key={admin}
-              id={admin}
+              key={admin._id}
+              id={`${admin.firstName} ${admin.lastName}`}
               name="AdminGroup"
-              label={admin}
-              value={admin}
+              label={`${admin.firstName} ${admin.lastName}`}
+              value={admin.ownerEmail}
             />
           ))}
         </div>

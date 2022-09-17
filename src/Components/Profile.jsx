@@ -25,7 +25,6 @@ export default function Profile() {
       return a - b;
     });
 
-    console.log(myTimes);
     setReservedTimes(myTimes);
   }
   useEffect(() => {
@@ -40,7 +39,10 @@ export default function Profile() {
   async function handlePostCustomerDetails(e) {
     e.preventDefault();
     try {
-      await ReserveTimeService.upsertUserCustomData(customerDetails);
+      await ReserveTimeService.upsertUserCustomData({
+        ...customerDetails,
+        ownerEmail: app.currentUser.profile.email,
+      });
       window.location = "/profile";
     } catch (e) {
       alert(e);

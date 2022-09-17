@@ -11,6 +11,7 @@ export default function ConfirmEmail() {
         const tokenId = searchParams.get("tokenId");
         await app.emailPasswordAuth.confirmUser(token, tokenId);
         alert("successfully confirmed");
+        window.location = "/login";
       } catch (error) {
         alert(error);
       }

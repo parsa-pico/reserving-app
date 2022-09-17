@@ -10,6 +10,7 @@ import NotFound from "./Components/NotFound";
 import ProtectedRoute from "./Components/common/ProtectedRoute";
 import Profile from "./Components/Profile";
 import "./App.css";
+import { isAdmin, isNormalUser } from "./Components/common/UserControl";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         <Route
           path="add-times"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute conditionFunc={isAdmin}>
               <AddTimeBox />
             </ProtectedRoute>
           }
@@ -29,7 +30,14 @@ function App() {
         <Route path="logout" element={<LogOut />} />
         <Route path="register" element={<Register />} />
         <Route path="register/confirmUser" element={<ConfirmEmail />} />
-        <Route path="profile" element={<Profile />} />
+        <Route
+          path="profile"
+          element={
+            <ProtectedRoute conditionFunc={isNormalUser}>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
         <Route path="notFound" element={<NotFound />} />
         <Route path="*" element={<Navigate to="notFound" />} />
       </Routes>

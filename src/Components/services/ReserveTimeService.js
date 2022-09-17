@@ -49,9 +49,7 @@ async function updateAdmins(adminName) {
   });
 }
 async function getAdmins() {
-  const { admins } = await realmService.findOne(adminsCollection, adminsConfig);
-
-  return admins;
+  return await realmService.find(userCustomDataCollection, { isAdmin: true });
 }
 const getReserveTime = async (collection, adminQueryObj) => {
   if (!app.currentUser) return;
