@@ -22,8 +22,9 @@ export default function ReserveBox() {
   async function getUserInfo() {
     const { firstName, lastName } =
       await ReserveTimeService.getUserCustomDataWithSearch();
-
-    setCustomerDetails({ firstName, lastName });
+    const ownerId = app.currentUser.id;
+    const ownerEmail = app.currentUser.profile.email;
+    setCustomerDetails({ ownerId, ownerEmail, firstName, lastName });
   }
   useEffect(() => {
     if (isUser()) getAdminNames();
@@ -80,8 +81,11 @@ export default function ReserveBox() {
     return times;
   }
   function convertedDate(dateObj) {
-    const { day, year } = dateObj;
-    const month = dateObj.month.number;
+    let { day, year } = dateObj;
+    let month = dateObj.month.number;
+    if (day.toString().length === 1) day = `0${day}`;
+    if (month.toString().length === 1) month = `0${month}`;
+    console.log(day, month);
     return `${year}/${month}/${day}`;
   }
 
