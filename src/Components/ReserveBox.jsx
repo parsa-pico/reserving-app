@@ -7,6 +7,8 @@ import DatePicker, { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { isNormalUser, isServerUser, isUser } from "./common/UserControl";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 const userCustomDataCollection = "userCustomData";
 export default function ReserveBox() {
   const [customerDetails, setCustomerDetails] = useState({});
@@ -97,7 +99,18 @@ export default function ReserveBox() {
     if (month.toString().length === 1) month = `0${month}`;
     return `${year}/${month}/${day}`;
   }
-
+  function isFormValid() {
+    if (
+      !customerDetails.firstName ||
+      !customerDetails.lastName ||
+      !selectedAdmin ||
+      !selectedDate ||
+      !selectedTime ||
+      app.currentUser._profile.type !== "normal"
+    )
+      return false;
+    return true;
+  }
   async function handleDateSelect(date) {
     const times = await AvailableTimes(
       adminTimes,
@@ -116,9 +129,6 @@ export default function ReserveBox() {
 
   return (
     <div className="container">
-      {!isNormalUser() && (
-        <p className="text-danger">you must login to reserve your time</p>
-      )}
       <form onSubmit={(e) => handleSubmitReserve(e, selectedTime)}>
         <div onChange={handleCustomerDetails}>
           <Input value={customerDetails.firstName} id={"firstName"} />
@@ -167,20 +177,22 @@ export default function ReserveBox() {
                 />
               ))}
         </div>
-        <button
-          disabled={
-            !customerDetails.firstName ||
-            !customerDetails.lastName ||
-            !selectedAdmin ||
-            !selectedDate ||
-            !selectedTime ||
-            app.currentUser._profile.type !== "normal"
+        <OverlayTrigger
+          trigger={!isNormalUser() && ["hover", "focus"]}
+          overlay={
+            <Tooltip id="tooltip-disabled">you must login first</Tooltip>
           }
-          className="btn btn-primary"
-          type="submit"
         >
-          Reserve your time
-        </button>
+          <span className="d-inline-block">
+            <button
+              disabled={!isFormValid()}
+              className="btn btn-primary"
+              type="submit"
+            >
+              Reserve your time
+            </button>
+          </span>
+        </OverlayTrigger>
       </form>
     </div>
   );
