@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Input } from "./common/Inputs";
 import ReserveTimeService from "./services/ReserveTimeService";
 import { app } from "./realmConfig";
+import UserTimesTable from "./UserTimesTable";
+import { sortByPersianDate } from "./common/sortMethods";
+import AdminTimesTable from "./AdminTimesTable";
+import { isAdmin } from "./common/UserControl";
 export default function Profile() {
   const [customerDetails, setCustomerDetails] = useState({});
   const [reservedTimes, setReservedTimes] = useState([]);
@@ -14,17 +18,18 @@ export default function Profile() {
   }
 
   async function getReservedTime() {
-    let myTimes = await ReserveTimeService.find("ReservedTimes", {
-      ownerId: app.currentUser.id,
-    });
-    myTimes = myTimes.sort((a, b) => {
-      a = a.date.split("/").join("");
-      b = b.date.split("/").join("");
-      a = parseInt(a);
-      b = parseInt(b);
-      return a - b;
-    });
-
+    let myTimes = [];
+    if (!isAdmin()) {
+      myTimes = await ReserveTimeService.find("ReservedTimes", {
+        ownerId: app.currentUser.id,
+      });
+    }
+    if (isAdmin()) {
+      myTimes = await ReserveTimeService.find("ReservedTimes", {
+        adminEmail: app.currentUser.profile.email,
+      });
+    }
+    myTimes = sortByPersianDate(myTimes);
     setReservedTimes(myTimes);
   }
   useEffect(() => {
@@ -74,31 +79,13 @@ export default function Profile() {
           change
         </button>
       )}
-      {reservedTimes.length == 0 && (
+      {reservedTimes && reservedTimes.length == 0 && (
         <h6 className="text-secondary" style={{ textAlign: "center" }}>
           currently you dont have any reservations
         </h6>
       )}
-      {reservedTimes.length !== 0 && (
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">date</th>
-              <th scope="col">time</th>
-              <th scope="col">admin</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reservedTimes.map((reserveObj) => (
-              <tr key={reserveObj._id}>
-                <td>{reserveObj.date}</td>
-                <td>{reserveObj.time}</td>
-                <td>{reserveObj.adminName}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      {!isAdmin() && <UserTimesTable reservedTimes={reservedTimes} />}
+      {isAdmin() && <AdminTimesTable reservedTimes={reservedTimes} />}
     </div>
   );
 }
