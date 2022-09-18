@@ -35,7 +35,7 @@ export default function Register() {
       <form onSubmit={handleRegister}>
         <div onChange={handleUserInfo}>
           <Input id="email" />
-          <Input id="password" />
+          <Input type="password" id="password" />
         </div>
         <button disabled={flag} className="btn btn-primary" type="submit">
           register

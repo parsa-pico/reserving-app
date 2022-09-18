@@ -32,7 +32,7 @@ export default function Login() {
       <form onSubmit={handleSubmit}>
         <div onChange={handleUserInfo}>
           <Input id={"email"} />
-          <Input id={"password"} />
+          <Input type="password" id={"password"} />
         </div>
         <button type="submit" className="btn btn-primary">
           Login
