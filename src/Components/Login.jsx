@@ -20,9 +20,11 @@ export default function Login() {
     }
   };
   function handleUserInfo({ target }) {
+    const value = target.value.trim();
+    console.log(value);
     setUser((prevState) => ({
       ...prevState,
-      [target.id]: target.value,
+      [target.id]: value,
     }));
   }
   return (

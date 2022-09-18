@@ -7,8 +7,11 @@ export default function Register() {
   const [result, setResult] = useState("");
   const [flag, setFlag] = useState(false);
   const handleUserInfo = ({ target }) => {
-    const { value, id } = target;
+    const { id } = target;
+    const value = target.value.trim();
+
     setUserInfo((prevState) => ({ ...prevState, [id]: value }));
+    console.log(userInfo);
   };
   // TODO: make loading message programatic
   async function handleRegister(e) {
@@ -19,7 +22,6 @@ export default function Register() {
         userInfo.email,
         userInfo.password
       );
-      console.log(result);
       setFlag(false);
       setResult("please check your email");
     } catch (e) {

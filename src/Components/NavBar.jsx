@@ -1,9 +1,10 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { isAdmin, isNormalUser } from "./common/UserControl";
 import { app } from "./realmConfig";
 
 export default function NavBar() {
+  const location = useLocation();
   const user = app.currentUser;
   return (
     <div>
@@ -30,7 +31,11 @@ export default function NavBar() {
           )}
           {isNormalUser() && (
             <li className="nav-item">
-              <NavLink className="nav-link" to="/logout">
+              <NavLink
+                className="nav-link"
+                to={"/logout"}
+                state={{ prevLocation: location.pathname }}
+              >
                 Logout
               </NavLink>
             </li>
