@@ -9,15 +9,17 @@ import ConfirmEmail from "./Components/ConfirmEmail";
 import NotFound from "./Components/NotFound";
 import ProtectedRoute from "./Components/common/ProtectedRoute";
 import Profile from "./Components/Profile";
-import "./App.css";
+import Home from "./Components/Home";
 import { isAdmin, isNormalUser } from "./Components/common/UserControl";
+import "./App.css";
 
 function App() {
   return (
     <>
       <NavBar />
       <Routes>
-        <Route path="/" element={<ReserveBox />} />
+        {/* <Route path="/" element={<ReserveBox />} /> */}
+        <Route path="/" element={<Home />} />
         <Route
           path="add-times"
           element={
