@@ -1,4 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap");
+:root {
+  --body-color: #6c757d;
+  --headers-color: black;
+}
 body,
 html {
   height: 100%;
@@ -9,6 +13,10 @@ html {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+body {
+  font-size: 1.4rem;
+  color: var(--body-color);
 }
 #root {
   height: 100vh;
@@ -35,15 +43,23 @@ h4,
 h5,
 h6 {
   font-family: "Roboto", sans-serif;
+  color: var(--headers-color);
 }
 h1 {
   font-size: 5rem;
+  text-align: center;
 }
 h2 {
   font-size: 3rem;
 }
 h3 {
   font-size: 2rem;
+}
+h4 {
+  font-size: 1.8rem;
+}
+h5 {
+  font-size: 1.6rem;
 }
 @media screen and (min-width: 1024px) {
   h1 {
@@ -80,14 +96,130 @@ code {
   color: white;
   text-align: center;
 }
+.hero__heading {
+  color: white;
+}
 .hero__button {
   text-align: center;
   font-size: 1.5rem;
 }
 @media screen and (min-width: 1024px) {
+  .hero {
+    height: 900px;
+  }
   .hero__button {
     font-size: 3rem;
     border-radius: 30px;
     padding: 1rem 2rem;
+  }
+}
+/* Cards */
+/* this is desktop first approach */
+.card {
+  flex-direction: column;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+}
+
+.card__close-btn {
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+.card__line,
+.card__details,
+.card__hr,
+.card__reserve-btn {
+  display: none;
+}
+.card--expanded {
+  z-index: 0;
+  max-width: 100%;
+}
+.card--expanded {
+  background-color: rgb(14, 0, 22);
+  color: white;
+
+  position: relative;
+}
+.card--expanded .card__line,
+.card--expanded .card__details,
+.card--expanded .card__close-btn,
+.card--expanded .card__hr,
+.card--expanded .card__reserve-btn {
+  display: inline-block;
+}
+.card--expanded .card__title,
+.card__details-header {
+  color: white;
+}
+.card__reserve-btn {
+  font-size: 1.8rem;
+}
+.card__details {
+  margin-top: 1.5rem;
+}
+.card__details-header {
+  color: #b4b4b4;
+}
+.card__line {
+  margin-left: 2rem;
+}
+
+.card__image {
+  cursor: pointer;
+  width: 150px;
+  background: rgb(63, 94, 251);
+  background: linear-gradient(
+    90deg,
+    rgba(63, 94, 251, 1) 0%,
+    rgba(252, 70, 70, 1) 100%
+  );
+  padding: 0.5rem;
+}
+.card--expanded .card__image {
+  background: none;
+}
+.card--expanded .card__line {
+  display: none;
+}
+@media screen and (min-width: 968px) {
+  .card {
+    flex-direction: row;
+  }
+  .card--expanded .card__line {
+    display: inline-block;
+  }
+  .card--expanded {
+    z-index: 2;
+    height: 100%;
+    width: 200%;
+    max-width: 100vw;
+  }
+  .card__reserve-btn {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+  }
+  .card__details {
+    text-align: left;
+    margin-left: 2rem;
+  }
+  .row .col-lg:nth-of-type(3n) .card__details {
+    order: -2;
+  }
+  .row .col-lg:nth-of-type(3n) .card__line {
+    order: -1;
+  }
+  .row .col-lg:nth-of-type(3n) .card--expanded {
+    transform: translateX(-50%);
+  }
+
+  .row .col-lg:nth-of-type(3n) .card__reserve-btn {
+    left: 20px;
+    bottom: 20px;
+    right: auto;
   }
 }
