@@ -28,6 +28,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/reserving" element={<ReserveBox />} />
         <Route path="login" element={<Login />} />
         <Route path="logout" element={<LogOut />} />
         <Route path="register" element={<Register />} />

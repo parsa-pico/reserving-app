@@ -128,7 +128,7 @@ export default function ReserveBox() {
   }
 
   return (
-    <div className="container">
+    <div className="container reserve-box">
       <form onSubmit={(e) => handleSubmitReserve(e, selectedTime)}>
         <div onChange={handleCustomerDetails}>
           <Input value={customerDetails.firstName} id={"firstName"} />

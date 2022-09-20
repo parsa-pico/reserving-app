@@ -17,6 +17,7 @@ html {
 body {
   font-size: 1.4rem;
   color: var(--body-color);
+  padding-top: 6rem;
 }
 #root {
   height: 100vh;
@@ -98,6 +99,7 @@ code {
 }
 .hero__heading {
   color: white;
+  text-shadow: 0 0 5px #51515167;
 }
 .hero__button {
   text-align: center;
@@ -222,4 +224,8 @@ code {
     bottom: 20px;
     right: auto;
   }
+}
+/* Reserve Box */
+.reserve-box {
+  margin-top: 7rem;
 }
