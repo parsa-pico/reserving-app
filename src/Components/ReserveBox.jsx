@@ -8,7 +8,6 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { isNormalUser, isServerUser, isUser } from "./common/UserControl";
 import Form from "react-bootstrap/Form";
-
 import { ReserveBtn } from "./ReserveBoxComponents";
 const userCustomDataCollection = "userCustomData";
 export default function ReserveBox() {
@@ -16,9 +15,16 @@ export default function ReserveBox() {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDayIndex, setSelectedDayIndex] = useState("");
   const [admins, setAdmins] = useState([]);
+  const [availableDays, setavailableDays] = useState([]);
   const [adminTimes, setAdminTimes] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState("");
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    if (!isUser()) handleApiLogin();
+    if (isUser()) getAdminNames();
+    if (isNormalUser()) getUserInfo();
+  }, []);
   const getAdminNames = async () => {
     const admins = await ReserveTimeService.getAdmins();
 
@@ -31,11 +37,7 @@ export default function ReserveBox() {
     const ownerEmail = app.currentUser.profile.email;
     setCustomerDetails({ ownerId, ownerEmail, firstName, lastName });
   }
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
-    if (isUser()) getAdminNames();
-    if (isNormalUser()) getUserInfo();
-  }, []);
+
   const handleCustomerDetails = (e) => {
     const { id, value } = e.target;
     setCustomerDetails((prevState) => ({ ...prevState, [id]: value }));
@@ -74,10 +76,17 @@ export default function ReserveBox() {
     const times = await ReserveTimeService.getReserveTime("adminTimes", {
       ownerEmail: adminEmail,
     });
+    let days = [];
+    for (let value of times) {
+      if (!days.find((day) => day == value.dayIndex))
+        days = [...days, value.dayIndex];
+    }
+    setavailableDays(days);
     setSelectedDate("");
     setSelectedTime("");
     setAdminTimes(times);
   };
+
   async function AvailableTimes(timesObj, adminProperty, date) {
     const times = await Promise.all(
       timesObj.map(async (timeObj) => {
@@ -126,7 +135,8 @@ export default function ReserveBox() {
   async function handleApiLogin() {
     const credentials = Realm.Credentials.apiKey(process.env.REACT_APP_API_KEY);
     await app.logIn(credentials);
-    window.location = "/";
+    console.log("api login");
+    window.location = "/reserving";
   }
 
   return (
@@ -142,12 +152,6 @@ export default function ReserveBox() {
             <Form.Control value={customerDetails.lastName} />
           </Form.Group>
         </div>
-        {!isUser() && (
-          <h5 className="hyperLink" onClick={handleApiLogin}>
-            see times...
-          </h5>
-        )}
-
         {/* <div onChange={handleAdminSelect}>
           {admins.map((admin) => (
             <RadioButton
@@ -170,6 +174,17 @@ export default function ReserveBox() {
         </Form.Select>
         {selectedAdmin && (
           <DatePicker
+            mapDays={({ date }) => {
+              let isAvailable = availableDays.includes(
+                date.weekDay.index.toString()
+              );
+
+              if (!isAvailable)
+                return {
+                  disabled: true,
+                  style: { color: "red" },
+                };
+            }}
             minDate={Date.now()}
             calendar={persian}
             locale={persian_fa}
