@@ -5,7 +5,7 @@ export default function Hero() {
   return (
     <div className="hero">
       <header className="hero__header">
-        <h1 className="hero__heading">GET YOUR THERAPY SESSEION!</h1>
+        <h1 className="hero__heading">EVERY ONE NEEDS TO BE HEARD</h1>
         <Button className="hero__button" variant="primary">
           Reserve Now
         </Button>

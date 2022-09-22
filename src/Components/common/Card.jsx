@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import CloseButton from "react-bootstrap/CloseButton";
 import { Button, Image } from "react-bootstrap";
 import doctor1 from "../../images/doctorImages/doctor1.webp";
-export default function Card() {
+export default function Card({ fullName, image }) {
   const baseCardClass = "card text-center p-5";
   const expandedCardClass = baseCardClass + " card--expanded";
   const [cardClass, setCardClass] = useState(baseCardClass);
-  console.log(cardClass);
+
   return (
     <>
       <div className={cardClass}>
@@ -26,7 +26,7 @@ export default function Card() {
             />
           </div>
           <div className="card__description">
-            <h3 className="card__title">john doe</h3>
+            <h3 className="card__title">{fullName}</h3>
             <p className="card__text">Lorem ipsum dolor sit amet.</p>
           </div>
         </div>

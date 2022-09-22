@@ -116,7 +116,7 @@ code {
   }
 }
 /* Cards */
-/* this is desktop first approach */
+
 .card {
   flex-direction: column;
   border-left: none;
@@ -187,7 +187,7 @@ code {
 .card--expanded .card__line {
   display: none;
 }
-@media screen and (min-width: 968px) {
+@media screen and (min-width: 1024px) {
   .card {
     flex-direction: row;
   }
@@ -209,17 +209,18 @@ code {
     text-align: left;
     margin-left: 2rem;
   }
-  .row .col-lg:nth-of-type(3n) .card__details {
+  .grid .card:nth-of-type(3n) .card__details {
     order: -2;
   }
-  .row .col-lg:nth-of-type(3n) .card__line {
+
+  .grid .card:nth-of-type(3n) .card__line {
     order: -1;
   }
-  .row .col-lg:nth-of-type(3n) .card--expanded {
+  .grid .card--expanded:nth-of-type(3n) {
     transform: translateX(-50%);
   }
 
-  .row .col-lg:nth-of-type(3n) .card__reserve-btn {
+  .grid .card:nth-of-type(3n) .card__reserve-btn {
     left: 20px;
     bottom: 20px;
     right: auto;
@@ -228,4 +229,18 @@ code {
 /* Reserve Box */
 .reserve-box {
   margin-top: 7rem;
+}
+/* Grids */
+.grid {
+  display: grid;
+}
+@media screen and (min-width: 768px) {
+  .grid--1x2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .grid--1x3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
