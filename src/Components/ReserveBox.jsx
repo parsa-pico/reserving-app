@@ -9,7 +9,9 @@ import persian_fa from "react-date-object/locales/persian_fa";
 import { isNormalUser, isServerUser, isUser } from "./common/UserControl";
 import Form from "react-bootstrap/Form";
 import { ReserveBtn } from "./ReserveBoxComponents";
+import realmService from "./services/realmService";
 const userCustomDataCollection = "userCustomData";
+// TODO:finding occupied days is very nasti,fix that
 export default function ReserveBox() {
   const [customerDetails, setCustomerDetails] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
@@ -19,6 +21,7 @@ export default function ReserveBox() {
   const [adminTimes, setAdminTimes] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState("");
+  const [occupiedDays, setOccupiedDays] = useState([]);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
     if (!isUser()) handleApiLogin();
@@ -44,21 +47,28 @@ export default function ReserveBox() {
   };
   const handleSubmitReserve = async (e, checkedTime) => {
     e.preventDefault();
+    const persianDate = convertedDate(selectedDate);
     try {
       await ReserveTimeService.insertNewTime({
         ...customerDetails,
         adminName: selectedAdmin.name,
         adminEmail: selectedAdmin.email,
-        date: convertedDate(selectedDate),
+        date: persianDate,
         dayIndex: selectedDayIndex,
         time: checkedTime,
       });
+      const isOccupied = await isDayOccupied(persianDate);
+      if (isOccupied)
+        realmService.insertOne("occupiedDays", {
+          date: persianDate,
+          adminEmail: selectedAdmin.email,
+        });
+      window.location = "/";
     } catch (e) {
       alert(e);
       console.log(e);
       return;
     }
-    window.location = "/";
   };
   const handleAdminSelect = async ({ target }) => {
     const { value: adminEmail, id: adminName } = target;
@@ -71,6 +81,10 @@ export default function ReserveBox() {
       if (!days.find((day) => day == value.dayIndex))
         days = [...days, value.dayIndex];
     }
+    const occupiedDays = await realmService.find("occupiedDays", {
+      adminEmail,
+    });
+    setOccupiedDays(occupiedDays);
     setavailableDaysIndex(days);
     setSelectedDate("");
     setSelectedTime("");
@@ -121,6 +135,18 @@ export default function ReserveBox() {
     setSelectedDayIndex(date.weekDay.index.toString());
     setAdminTimes(times);
     setSelectedDate(date);
+    isDayOccupied(convertedDate(date));
+  }
+  async function isDayOccupied(persianDate) {
+    let dayIndex;
+    const result = await ReserveTimeService.find("ReservedTimes", {
+      date: persianDate,
+    });
+
+    if (result.length !== 0) dayIndex = await result[0].dayIndex;
+    const times = adminTimes.filter((timeObj) => timeObj.dayIndex == dayIndex);
+    if (times.length === result.length) return true;
+    return false;
   }
   async function handleApiLogin() {
     const credentials = Realm.Credentials.apiKey(process.env.REACT_APP_API_KEY);
@@ -157,8 +183,12 @@ export default function ReserveBox() {
               let isAvailable = availableDaysIndex.includes(
                 date.weekDay.index.toString()
               );
-
-              if (!isAvailable)
+              let isOccupied = false;
+              if (isAvailable)
+                isOccupied = occupiedDays.find(
+                  (day) => day.date == convertedDate(date)
+                );
+              if (!isAvailable || isOccupied)
                 return {
                   disabled: true,
                   style: { color: "red" },
