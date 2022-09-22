@@ -10,9 +10,9 @@ export default function NavBarComponent() {
   const location = useLocation();
   const user = app.currentUser;
   return (
-    <Navbar className="fs-1" bg="light" expand="lg" fixed="top">
+    <Navbar className="fs-5" bg="light" expand="lg" fixed="top">
       <Container>
-        <Navbar.Brand className="fs-1" href="/">
+        <Navbar.Brand className="fs-3" href="/">
           Reserving app
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

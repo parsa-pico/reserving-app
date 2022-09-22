@@ -7,8 +7,9 @@ import DatePicker, { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { isNormalUser, isServerUser, isUser } from "./common/UserControl";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
+import Form from "react-bootstrap/Form";
+
+import { ReserveBtn } from "./ReserveBoxComponents";
 const userCustomDataCollection = "userCustomData";
 export default function ReserveBox() {
   const [customerDetails, setCustomerDetails] = useState({});
@@ -31,6 +32,7 @@ export default function ReserveBox() {
     setCustomerDetails({ ownerId, ownerEmail, firstName, lastName });
   }
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
     if (isUser()) getAdminNames();
     if (isNormalUser()) getUserInfo();
   }, []);
@@ -99,7 +101,7 @@ export default function ReserveBox() {
     if (month.toString().length === 1) month = `0${month}`;
     return `${year}/${month}/${day}`;
   }
-  function isFormValid() {
+  function isNotFormValid() {
     if (
       !customerDetails.firstName ||
       !customerDetails.lastName ||
@@ -108,8 +110,8 @@ export default function ReserveBox() {
       !selectedTime ||
       app.currentUser._profile.type !== "normal"
     )
-      return false;
-    return true;
+      return true;
+    return false;
   }
   async function handleDateSelect(date) {
     const times = await AvailableTimes(
@@ -129,10 +131,16 @@ export default function ReserveBox() {
 
   return (
     <div className="container reserve-box">
-      <form onSubmit={(e) => handleSubmitReserve(e, selectedTime)}>
+      <Form onSubmit={(e) => handleSubmitReserve(e, selectedTime)}>
         <div onChange={handleCustomerDetails}>
-          <Input value={customerDetails.firstName} id={"firstName"} />
-          <Input value={customerDetails.lastName} id={"lastName"} />
+          <Form.Group controlId="firstName">
+            <Form.Label>First name</Form.Label>
+            <Form.Control value={customerDetails.firstName} />
+          </Form.Group>
+          <Form.Group controlId="lastName">
+            <Form.Label>LastName</Form.Label>
+            <Form.Control value={customerDetails.lastName} />
+          </Form.Group>
         </div>
         {!isUser() && (
           <h5 className="hyperLink" onClick={handleApiLogin}>
@@ -140,7 +148,7 @@ export default function ReserveBox() {
           </h5>
         )}
 
-        <div onChange={handleAdminSelect}>
+        {/* <div onChange={handleAdminSelect}>
           {admins.map((admin) => (
             <RadioButton
               key={admin._id}
@@ -150,7 +158,16 @@ export default function ReserveBox() {
               value={admin.ownerEmail}
             />
           ))}
-        </div>
+        </div> */}
+        <Form.Select className="mt-4 mb-4" onChange={handleAdminSelect}>
+          <option>choose your admin</option>
+          {admins.map((admin) => (
+            <option
+              key={admin._id}
+              value={admin.ownerEmail}
+            >{`${admin.firstName} ${admin.lastName}`}</option>
+          ))}
+        </Form.Select>
         {selectedAdmin && (
           <DatePicker
             minDate={Date.now()}
@@ -177,23 +194,8 @@ export default function ReserveBox() {
                 />
               ))}
         </div>
-        <OverlayTrigger
-          trigger={!isNormalUser() && ["hover", "focus"]}
-          overlay={
-            <Tooltip id="tooltip-disabled">you must login first</Tooltip>
-          }
-        >
-          <span className="d-inline-block">
-            <button
-              disabled={!isFormValid()}
-              className="btn btn-primary"
-              type="submit"
-            >
-              Reserve your time
-            </button>
-          </span>
-        </OverlayTrigger>
-      </form>
+        <ReserveBtn disabled={isNotFormValid}>Rereve your time!</ReserveBtn>
+      </Form>
     </div>
   );
 }

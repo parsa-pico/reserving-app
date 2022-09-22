@@ -20,7 +20,10 @@ export default function Cards() {
       </header>
       <div className="grid grid--1x3">
         {admins.map((admin) => (
-          <Card fullName={admin.firstName + " " + admin.lastName} />
+          <Card
+            key={admin._id}
+            fullName={admin.firstName + " " + admin.lastName}
+          />
         ))}
       </div>
     </Container>

@@ -6,7 +6,6 @@
 body,
 html {
   height: 100%;
-  font-size: 62.5%;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -15,7 +14,6 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 body {
-  font-size: 1.4rem;
   color: var(--body-color);
   padding-top: 6rem;
 }
@@ -98,6 +96,7 @@ code {
   text-align: center;
 }
 .hero__heading {
+  font-size: 2rem;
   color: white;
   text-shadow: 0 0 5px #51515167;
 }
@@ -113,6 +112,9 @@ code {
     font-size: 3rem;
     border-radius: 30px;
     padding: 1rem 2rem;
+  }
+  .hero__heading {
+    font-size: 5rem;
   }
 }
 /* Cards */
@@ -139,6 +141,7 @@ code {
 .card--expanded {
   z-index: 0;
   max-width: 100%;
+  transition: all 0.2s, transform 0s;
 }
 .card--expanded {
   background-color: rgb(14, 0, 22);
@@ -228,7 +231,7 @@ code {
 }
 /* Reserve Box */
 .reserve-box {
-  margin-top: 7rem;
+  margin-top: 2rem;
 }
 /* Grids */
 .grid {
@@ -242,5 +245,25 @@ code {
 @media screen and (min-width: 1024px) {
   .grid--1x3 {
     grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+/* inputs */
+
+@media screen and (min-width: 1024px) {
+  .form-label {
+    font-size: 2rem;
+  }
+  .form-control {
+    font-size: 1.5rem;
+  }
+  .form-select {
+    font-size: 1.5rem;
+  }
+  .rmdp-input {
+    font-size: 1.5rem;
+    padding: 20px 10px;
+  }
+  .form-check {
+    font-size: 1.5rem;
   }
 }
