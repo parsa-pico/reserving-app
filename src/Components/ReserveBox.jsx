@@ -15,7 +15,7 @@ export default function ReserveBox() {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDayIndex, setSelectedDayIndex] = useState("");
   const [admins, setAdmins] = useState([]);
-  const [availableDays, setavailableDays] = useState([]);
+  const [availableDaysIndex, setavailableDaysIndex] = useState([]);
   const [adminTimes, setAdminTimes] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState("");
@@ -44,16 +44,6 @@ export default function ReserveBox() {
   };
   const handleSubmitReserve = async (e, checkedTime) => {
     e.preventDefault();
-    // const selectedTimeInDb = await ReserveTimeService.findOne({
-    //   time: checkedTime,
-    //   adminEmail: selectedAdmin.email,
-    //   date: convertedDate(selectedDate),
-    // });
-    // if (selectedTimeInDb) {
-    //   alert("this time is not available");
-    //   return;
-    // }
-
     try {
       await ReserveTimeService.insertNewTime({
         ...customerDetails,
@@ -81,7 +71,7 @@ export default function ReserveBox() {
       if (!days.find((day) => day == value.dayIndex))
         days = [...days, value.dayIndex];
     }
-    setavailableDays(days);
+    setavailableDaysIndex(days);
     setSelectedDate("");
     setSelectedTime("");
     setAdminTimes(times);
@@ -152,7 +142,6 @@ export default function ReserveBox() {
             <Form.Control value={customerDetails.lastName} />
           </Form.Group>
         </div>
-
         <Form.Select className="mt-4 mb-4" onChange={handleAdminSelect}>
           <option>choose your admin</option>
           {admins.map((admin) => (
@@ -165,7 +154,7 @@ export default function ReserveBox() {
         {selectedAdmin && (
           <DatePicker
             mapDays={({ date }) => {
-              let isAvailable = availableDays.includes(
+              let isAvailable = availableDaysIndex.includes(
                 date.weekDay.index.toString()
               );
 
