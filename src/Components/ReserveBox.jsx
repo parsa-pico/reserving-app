@@ -152,17 +152,7 @@ export default function ReserveBox() {
             <Form.Control value={customerDetails.lastName} />
           </Form.Group>
         </div>
-        {/* <div onChange={handleAdminSelect}>
-          {admins.map((admin) => (
-            <RadioButton
-              key={admin._id}
-              id={`${admin.firstName} ${admin.lastName}`}
-              name="AdminGroup"
-              label={`${admin.firstName} ${admin.lastName}`}
-              value={admin.ownerEmail}
-            />
-          ))}
-        </div> */}
+
         <Form.Select className="mt-4 mb-4" onChange={handleAdminSelect}>
           <option>choose your admin</option>
           {admins.map((admin) => (
