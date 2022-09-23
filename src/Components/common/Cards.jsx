@@ -1,24 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Card from "./Card";
-import { Row } from "react-bootstrap";
-import { Col } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import ReserveTimeService from "../services/ReserveTimeService";
+import LoadingContext from "../context/LoadingContext";
 export default function Cards() {
   const [admins, setAdmins] = useState([]);
+  const LoadingState = useContext(LoadingContext);
+
   async function getAdmins() {
-    const result = await ReserveTimeService.getAdmins();
-    setAdmins(result);
+    try {
+      LoadingState.setIsLoading(true);
+      const result = await ReserveTimeService.getAdmins();
+      setAdmins(result);
+      LoadingState.setIsLoading(false);
+    } catch (error) {
+      alert(error);
+      LoadingState.setIsLoading(false);
+    }
   }
+
   useEffect(() => {
     getAdmins();
-  });
+  }, []);
+
   return (
     <Container>
       <header>
         <h1>Choose your therapist</h1>
       </header>
-      <div className="grid grid--1x3">
+      <div className={"grid grid--1x3 "}>
         {admins.map((admin) => (
           <Card
             key={admin._id}

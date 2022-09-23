@@ -10,9 +10,10 @@ import { isNormalUser, isServerUser, isUser } from "./common/UserControl";
 import Form from "react-bootstrap/Form";
 import { ReserveBtn } from "./ReserveBoxComponents";
 import realmService from "./services/realmService";
+import LodingSpinner from "./common/LodingSpinner";
 const userCustomDataCollection = "userCustomData";
 // TODO:finding occupied days is very nasti,fix that
-export default function ReserveBox() {
+export default function ReserveBox({ isLoading, setIsLoading }) {
   const [customerDetails, setCustomerDetails] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDayIndex, setSelectedDayIndex] = useState("");
@@ -49,6 +50,7 @@ export default function ReserveBox() {
     e.preventDefault();
     const persianDate = convertedDate(selectedDate);
     try {
+      setIsLoading(true);
       await ReserveTimeService.insertNewTime({
         ...customerDetails,
         adminName: selectedAdmin.name,
@@ -63,10 +65,11 @@ export default function ReserveBox() {
           date: persianDate,
           adminEmail: selectedAdmin.email,
         });
+      setIsLoading(false);
       window.location = "/";
     } catch (e) {
       alert(e);
-      console.log(e);
+      setIsLoading(false);
       return;
     }
   };
@@ -171,7 +174,7 @@ export default function ReserveBox() {
   }
 
   return (
-    <div className="container reserve-box">
+    <div disabled={isLoading} className="container reserve-box ">
       <Form onSubmit={(e) => handleSubmitReserve(e, selectedTime)}>
         <div onChange={handleCustomerDetails}>
           <Form.Group controlId="firstName">
