@@ -132,20 +132,35 @@ export default function ReserveBox() {
       selectedAdmin.email,
       convertedDate(date)
     );
+
     setSelectedDayIndex(date.weekDay.index.toString());
     setAdminTimes(times);
     setSelectedDate(date);
-    isDayOccupied(convertedDate(date));
+    await isDayOccupied(convertedDate(date));
   }
   async function isDayOccupied(persianDate) {
-    let dayIndex;
-    const result = await ReserveTimeService.find("ReservedTimes", {
+    let selectedDayIndex;
+    let selectedDay = await ReserveTimeService.find("ReservedTimes", {
       date: persianDate,
+      adminEmail: selectedAdmin.email,
     });
 
-    if (result.length !== 0) dayIndex = await result[0].dayIndex;
-    const times = adminTimes.filter((timeObj) => timeObj.dayIndex == dayIndex);
-    if (times.length === result.length) return true;
+    if (selectedDay.length !== 0) {
+      selectedDayIndex = await selectedDay[0].dayIndex;
+      selectedDay = selectedDay
+        .sort((a, b) => a.time - b.time)
+        .map((obj) => obj.time);
+    }
+    const sameDayAdminTimes = adminTimes
+      .filter((timeObj) => timeObj.dayIndex == selectedDayIndex)
+
+      .sort((a, b) => a.time - b.time)
+      .map((obj) => obj.time);
+    // const t = sameDayAdminTimes.join();
+    // const r = selectedDay.join();
+    // console.log(t);
+    // console.log(r);
+    if (sameDayAdminTimes.join() == selectedDay.join()) return true;
     return false;
   }
   async function handleApiLogin() {
