@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Input } from "./common/Inputs";
 import { app } from "./realmConfig";
+import LoadingContext from "./context/LoadingContext";
 
 export default function Register() {
+  const LoadingState = useContext(LoadingContext);
   const [userInfo, setUserInfo] = useState({});
   const [result, setResult] = useState("");
-  const [flag, setFlag] = useState(false);
   const handleUserInfo = ({ target }) => {
     const { id } = target;
     const value = target.value.trim();
@@ -17,15 +18,15 @@ export default function Register() {
   async function handleRegister(e) {
     e.preventDefault();
     try {
-      setFlag(true);
+      LoadingState.setIsLoading(true);
       const result = await app.emailPasswordAuth.registerUser(
         userInfo.email,
         userInfo.password
       );
-      setFlag(false);
+      LoadingState.setIsLoading(false);
       setResult("please check your email");
     } catch (e) {
-      setFlag(false);
+      LoadingState.setIsLoading(false);
       setResult(e.message);
     }
   }
@@ -37,10 +38,13 @@ export default function Register() {
           <Input id="email" />
           <Input type="password" id="password" />
         </div>
-        <button disabled={flag} className="btn btn-primary" type="submit">
+        <button
+          disabled={LoadingState.isLoading}
+          className="btn btn-primary"
+          type="submit"
+        >
           register
         </button>
-        {flag === true && <h2> Loading...</h2>}
         {result && <h6>{result}</h6>}
       </form>
     </div>

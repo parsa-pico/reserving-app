@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import * as Realm from "realm-web";
 import { Input } from "./common/Inputs";
 import { app } from "./realmConfig";
+import LoadingContext from "./context/LoadingContext";
+
 export default function Login() {
   const [loginId, setLoginId] = useState("");
   const [user, setUser] = useState({});
-
+  const LoadingState = useContext(LoadingContext);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const credentials = Realm.Credentials.emailPassword(
@@ -13,10 +15,13 @@ export default function Login() {
       user.password
     );
     try {
+      LoadingState.setIsLoading(true);
       await app.logIn(credentials);
+      LoadingState.setIsLoading(false);
       window.location = "/";
     } catch (error) {
       alert(error);
+      LoadingState.setIsLoading(false);
     }
   };
   function handleUserInfo({ target }) {
@@ -30,7 +35,7 @@ export default function Login() {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div onChange={handleUserInfo}>
+        <div disabled={LoadingState.isLoading} onChange={handleUserInfo}>
           <Input id={"email"} />
           <Input type="password" id={"password"} />
         </div>
