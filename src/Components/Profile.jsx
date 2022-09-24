@@ -58,7 +58,7 @@ export default function Profile() {
     const r = await axios.post(
       "https://api.idpay.ir/v1.1/payment",
       {
-        order_id: 101,
+        order_id: "101",
         amount: 10000,
         name: "پارسا ",
         phone: "09380347820",
