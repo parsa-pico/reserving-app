@@ -1,7 +1,6 @@
 import React from "react";
 
 export default function UserTimesTable({ reservedTimes }) {
-  console.log(reservedTimes);
   return (
     <div>
       {reservedTimes && reservedTimes.length !== 0 && (
