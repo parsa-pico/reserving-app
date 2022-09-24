@@ -1,6 +1,7 @@
 import React from "react";
 
 export default function UserTimesTable({ reservedTimes }) {
+  console.log(reservedTimes);
   return (
     <div>
       {reservedTimes && reservedTimes.length !== 0 && (
@@ -9,7 +10,7 @@ export default function UserTimesTable({ reservedTimes }) {
             <tr>
               <th scope="col">date</th>
               <th scope="col">time</th>
-              <th scope="col">admin</th>
+              <th scope="col">therapist</th>
             </tr>
           </thead>
           <tbody>

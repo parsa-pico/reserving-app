@@ -3,6 +3,7 @@ import Card from "./Card";
 import Container from "react-bootstrap/Container";
 import ReserveTimeService from "../services/ReserveTimeService";
 import LoadingContext from "../context/LoadingContext";
+import { isUser } from "./UserControl";
 export default function Cards() {
   const [admins, setAdmins] = useState([]);
   const LoadingState = useContext(LoadingContext);
@@ -14,7 +15,7 @@ export default function Cards() {
       setAdmins(result);
       LoadingState.setIsLoading(false);
     } catch (error) {
-      alert(error);
+      if (isUser()) alert(error);
       LoadingState.setIsLoading(false);
     }
   }

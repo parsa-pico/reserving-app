@@ -46,6 +46,7 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
     const { id, value } = e.target;
     setCustomerDetails((prevState) => ({ ...prevState, [id]: value }));
   };
+
   const handleSubmitReserve = async (e, checkedTime) => {
     e.preventDefault();
     const persianDate = convertedDate(selectedDate);
@@ -73,8 +74,13 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
       return;
     }
   };
-  const handleAdminSelect = async ({ target }) => {
-    const { value: adminEmail, id: adminName } = target;
+  const handleAdminSelect = async ({ target, currentTarget }) => {
+    const options = target.options;
+    const index = target.selectedIndex;
+    const adminName = options[index].id;
+    const adminEmail = options[index].value;
+
+    // const { value: adminEmail, id: adminName } = target;
     setSelectedAdmin({ email: adminEmail, name: adminName });
     const times = await ReserveTimeService.getReserveTime("adminTimes", {
       ownerEmail: adminEmail,
@@ -187,16 +193,18 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
           </Form.Group>
         </div>
         <Form.Select className="mt-4 mb-4" onChange={handleAdminSelect}>
-          <option>choose your admin</option>
+          <option>choose your therapist</option>
           {admins.map((admin) => (
             <option
               key={admin._id}
+              id={`${admin.firstName} ${admin.lastName}`}
               value={admin.ownerEmail}
             >{`${admin.firstName} ${admin.lastName}`}</option>
           ))}
         </Form.Select>
         {selectedAdmin && (
           <DatePicker
+            placeholder="choose the date"
             mapDays={({ date }) => {
               let isAvailable = availableDaysIndex.includes(
                 date.weekDay.index.toString()
