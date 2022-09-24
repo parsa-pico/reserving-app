@@ -30,9 +30,15 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
     if (isNormalUser()) getUserInfo();
   }, []);
   const getAdminNames = async () => {
-    const admins = await ReserveTimeService.getAdmins();
-
-    setAdmins(admins);
+    try {
+      setIsLoading(true);
+      const admins = await ReserveTimeService.getAdmins();
+      setAdmins(admins);
+      setIsLoading(false);
+    } catch (e) {
+      alert(e.message);
+      setIsLoading(false);
+    }
   };
   async function getUserInfo() {
     const { firstName, lastName } =
@@ -136,16 +142,21 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
     return false;
   }
   async function handleDateSelect(date) {
-    const times = await AvailableTimes(
-      adminTimes,
-      selectedAdmin.email,
-      convertedDate(date)
-    );
-
-    setSelectedDayIndex(date.weekDay.index.toString());
-    setAdminTimes(times);
-    setSelectedDate(date);
-    await isDayOccupied(convertedDate(date));
+    try {
+      setIsLoading(true);
+      const times = await AvailableTimes(
+        adminTimes,
+        selectedAdmin.email,
+        convertedDate(date)
+      );
+      setIsLoading(false);
+      setSelectedDayIndex(date.weekDay.index.toString());
+      setAdminTimes(times);
+      setSelectedDate(date);
+    } catch (error) {
+      alert(error.message);
+      setIsLoading(false);
+    }
   }
   async function isDayOccupied(persianDate) {
     let selectedDayIndex;
