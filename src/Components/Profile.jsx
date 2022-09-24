@@ -68,7 +68,7 @@ export default function Profile() {
       },
       {
         headers: {
-          "content-type": "text/json",
+          "content-type": "application/json",
           "X-API-KEY": "f6a581fd-f287-4af8-b9c3-4cc383f54977",
           "X-SANDBOX": true,
         },
