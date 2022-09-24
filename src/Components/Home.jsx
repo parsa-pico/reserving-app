@@ -14,12 +14,12 @@ export default function Home({ isLoading }) {
     window.location = "/";
   }
   useEffect(() => {
-    if (!isUser()) handleApiLogin();
+    // if (!isUser()) handleApiLogin();
   });
   return (
     <div id="homePage">
       <Hero />
-      {!isLoading && <Cards />}
+      {/* {!isLoading && <Cards />} */}
     </div>
   );
 }
