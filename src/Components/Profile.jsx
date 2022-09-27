@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Input } from "./common/Inputs";
 import ReserveTimeService from "./services/ReserveTimeService";
+import idPayService from "./services/idPayService";
 import { app } from "./realmConfig";
 import UserTimesTable from "./UserTimesTable";
 import { sortByPersianDate } from "./common/sortMethods";
@@ -54,21 +55,16 @@ export default function Profile() {
       alert(e);
     }
   }
-  async function idPay() {
+
+  async function verify() {
     const r = await axios.post(
-      "https://api.idpay.ir/v1.1/payment",
+      "https://api.idpay.ir/v1.1/payment/verify",
       {
-        order_id: "101",
-        amount: 10000,
-        name: "پارسا ",
-        phone: "09380347820",
-        mail: "my@site.com",
-        desc: "توضیحات پرداخت کننده",
-        callback: "https://google.com/",
+        id: "9176fcea3ec4604dc01f360bd315963f",
+        order_id: "5",
       },
       {
         headers: {
-          "content-type": "application/json",
           "X-API-KEY": "f6a581fd-f287-4af8-b9c3-4cc383f54977",
           "X-SANDBOX": true,
         },
@@ -78,9 +74,6 @@ export default function Profile() {
   }
   return (
     <div className="container">
-      <button onClick={idPay} className="btn btn-primary">
-        test
-      </button>
       <form onSubmit={handlePostCustomerDetails}>
         <div onChange={handleCustomerDetails}>
           <Input
