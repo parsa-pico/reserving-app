@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { RadioButton, Input } from "./common/Inputs";
 import { app } from "./realmConfig";
 import * as Realm from "realm-web";
@@ -6,6 +7,7 @@ import ReserveTimeService from "./services/ReserveTimeService";
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+import idPayService from "./services/idPayService";
 import { isNormalUser, isServerUser, isUser } from "./common/UserControl";
 import Form from "react-bootstrap/Form";
 import { ReserveBtn } from "./ReserveBoxComponents";
@@ -14,6 +16,7 @@ import LodingSpinner from "./common/LodingSpinner";
 const userCustomDataCollection = "userCustomData";
 // TODO:finding occupied days is very nasti,fix that
 export default function ReserveBox({ isLoading, setIsLoading }) {
+  const navigate = useNavigate();
   const [customerDetails, setCustomerDetails] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDayIndex, setSelectedDayIndex] = useState("");
@@ -52,10 +55,19 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
     const { id, value } = e.target;
     setCustomerDetails((prevState) => ({ ...prevState, [id]: value }));
   };
+  // async function paymentInfo() {
+  //   const { link: paymentLink, id: paymentId } = await idPayService.payment(
+  //     customerDetails.lastName
+  //   );
 
+  //   return { paymentId, paymentLink };
+  // }
   const handleSubmitReserve = async (e, checkedTime) => {
     e.preventDefault();
     const persianDate = convertedDate(selectedDate);
+    const { paymentId, paymentLink } = await idPayService.payment(
+      customerDetails.lastName
+    );
     try {
       setIsLoading(true);
       await ReserveTimeService.insertNewTime({
@@ -65,6 +77,7 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
         date: persianDate,
         dayIndex: selectedDayIndex,
         time: checkedTime,
+        idPay: { isPayed: false, paymentId, paymentLink },
       });
       const isOccupied = await isDayOccupied(persianDate);
       if (isOccupied)
@@ -72,8 +85,8 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
           date: persianDate,
           adminEmail: selectedAdmin.email,
         });
+      window.location.replace(paymentLink);
       setIsLoading(false);
-      window.location = "/";
     } catch (e) {
       alert(e);
       setIsLoading(false);

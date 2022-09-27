@@ -6,11 +6,17 @@ const {
 } = Realm;
 const collection = "ReservedTimes";
 const userCustomDataCollection = "userCustomData";
+const adminsCustomDataCollection = "AdminsCustomData";
 const adminsCollection = "config";
 const adminsTimes = "adminTimes";
 const adminsConfig = {
   _id: ObjectId("631dda00104248fda6639430"),
 };
+async function getOrderId(myCollection = collection) {
+  const count = await realmService.countCollection(myCollection);
+  const orderId = count + 1;
+  return orderId;
+}
 async function insertNewTime(data, myCollection = collection) {
   const result = await realmService.insertOne(myCollection, data);
   return result.insertedId.toString();
@@ -100,4 +106,5 @@ export default {
   addUserCustomData,
   upsertUserCustomData,
   getUserCustomDataWithSearch,
+  getOrderId,
 };

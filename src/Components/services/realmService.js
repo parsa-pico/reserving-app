@@ -12,6 +12,10 @@ function getCollection(
     .db(db)
     .collection(collection);
 }
+async function countCollection(mycollection, db = dataBase) {
+  const collection = getCollection(db, mycollection);
+  return await collection.count();
+}
 async function insertOne(mycollection, data, db = dataBase) {
   const collection = getCollection(db, mycollection);
   return await collection.insertOne(data);
@@ -61,4 +65,5 @@ export default {
   updateMany,
   deleteMany,
   deleteOne,
+  countCollection,
 };
