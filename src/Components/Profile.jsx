@@ -56,22 +56,6 @@ export default function Profile() {
     }
   }
 
-  async function verify() {
-    const r = await axios.post(
-      "https://api.idpay.ir/v1.1/payment/verify",
-      {
-        id: "9176fcea3ec4604dc01f360bd315963f",
-        order_id: "5",
-      },
-      {
-        headers: {
-          "X-API-KEY": "f6a581fd-f287-4af8-b9c3-4cc383f54977",
-          "X-SANDBOX": true,
-        },
-      }
-    );
-    console.log(r);
-  }
   return (
     <div className="container">
       <form onSubmit={handlePostCustomerDetails}>

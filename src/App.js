@@ -15,6 +15,7 @@ import Home from "./Components/Home";
 import LodingSpinner from "./Components/common/LodingSpinner";
 import { isAdmin, isNormalUser } from "./Components/common/UserControl";
 import "./App.css";
+import PaymentCallback from "./Components/callbacks/PaymentCallback";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +52,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="payments/callback" element={<PaymentCallback />} />
           <Route path="notFound" element={<NotFound />} />
           <Route path="*" element={<Navigate to="notFound" />} />
         </Routes>
