@@ -65,10 +65,10 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
   const handleSubmitReserve = async (e, checkedTime) => {
     e.preventDefault();
     const persianDate = convertedDate(selectedDate);
-    const { paymentId, paymentLink } = await idPayService.payment(
-      customerDetails.lastName
-    );
     try {
+      const { paymentId, paymentLink } = await idPayService.payment(
+        customerDetails.lastName
+      );
       setIsLoading(true);
       await ReserveTimeService.insertNewTime({
         ...customerDetails,
