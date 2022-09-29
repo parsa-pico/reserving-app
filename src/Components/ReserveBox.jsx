@@ -78,6 +78,7 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
         dayIndex: selectedDayIndex,
         time: checkedTime,
         idPay: { paymentId, paymentLink },
+        isPayed: false,
       });
       const isOccupied = await isDayOccupied(persianDate);
       if (isOccupied)
@@ -88,6 +89,7 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
       window.location.replace(paymentLink);
       setIsLoading(false);
     } catch (e) {
+      console.log(e);
       alert(e);
       setIsLoading(false);
       return;
