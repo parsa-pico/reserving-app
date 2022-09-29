@@ -18,7 +18,8 @@ export default function PaymentCallback() {
   async function handleVerify() {
     const result = await idPayService.verify(
       paymentDetails.id,
-      paymentDetails.order_id
+      paymentDetails.order_id,
+      paymentDetails.track_id
     );
     console.log(result);
   }
