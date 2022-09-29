@@ -77,7 +77,8 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
         date: persianDate,
         dayIndex: selectedDayIndex,
         time: checkedTime,
-        idPay: { paymentId, paymentLink },
+        paymentId,
+        paymentLink,
         isPayed: false,
       });
       const isOccupied = await isDayOccupied(persianDate);
