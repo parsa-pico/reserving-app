@@ -10,6 +10,7 @@ export default function UserTimesTable({ reservedTimes }) {
               <th scope="col">date</th>
               <th scope="col">time</th>
               <th scope="col">therapist</th>
+              <th scope="col">is payed</th>
             </tr>
           </thead>
           <tbody>
@@ -19,6 +20,7 @@ export default function UserTimesTable({ reservedTimes }) {
                   <td>{reserveObj.date}</td>
                   <td>{reserveObj.time}</td>
                   <td>{reserveObj.adminName}</td>
+                  <td>{reserveObj.isPayed}</td>
                 </tr>
               ))}
           </tbody>
