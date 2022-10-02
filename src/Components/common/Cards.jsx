@@ -33,6 +33,7 @@ export default function Cards() {
         {admins.map((admin) => (
           <Card
             key={admin._id}
+            adminId={admin._id}
             fullName={admin.firstName + " " + admin.lastName}
           />
         ))}

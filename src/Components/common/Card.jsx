@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import CloseButton from "react-bootstrap/CloseButton";
 import { Button, Image } from "react-bootstrap";
 import doctor1 from "../../images/doctorImages/doctor1.webp";
-export default function Card({ fullName, image }) {
+import { useNavigate } from "react-router-dom";
+export default function Card({ fullName, image, adminId }) {
+  const navigate = useNavigate();
   const baseCardClass = "card text-center p-5";
   const expandedCardClass = baseCardClass + " card--expanded";
   const [cardClass, setCardClass] = useState(baseCardClass);
@@ -38,7 +40,10 @@ export default function Card({ fullName, image }) {
           <h4 className="card__details-header">Speciality</h4>
           <p>Lorem, ipsum dolor.</p>
         </div>
-        <Button className="card__reserve-btn">
+        <Button
+          onClick={() => navigate(`/reserving?adminId=${adminId}`)}
+          className="card__reserve-btn"
+        >
           Reserve time with this person
         </Button>
       </div>

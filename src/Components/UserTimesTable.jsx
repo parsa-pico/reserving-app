@@ -20,7 +20,7 @@ export default function UserTimesTable({ reservedTimes }) {
                   <td>{reserveObj.date}</td>
                   <td>{reserveObj.time}</td>
                   <td>{reserveObj.adminName}</td>
-                  <td>{reserveObj.isPayed}</td>
+                  <td>{`${reserveObj.isPayed}`}</td>
                 </tr>
               ))}
           </tbody>

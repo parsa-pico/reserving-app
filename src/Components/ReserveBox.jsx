@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useRef } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { RadioButton, Input } from "./common/Inputs";
 import { app } from "./realmConfig";
 import * as Realm from "realm-web";
@@ -16,9 +16,13 @@ import LodingSpinner from "./common/LodingSpinner";
 const userCustomDataCollection = "userCustomData";
 // TODO:finding occupied days is very nasti,fix that
 export default function ReserveBox({ isLoading, setIsLoading }) {
-  const navigate = useNavigate();
+  let minDate = new Date();
+  minDate = minDate.setDate(minDate.getDate() + 1);
+  const adminRef = useRef();
+  const [searchParams] = useSearchParams();
+  const [preSelectedAdminId, setPreSelectedAdminId] = useState("");
   const [customerDetails, setCustomerDetails] = useState({});
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState();
   const [selectedDayIndex, setSelectedDayIndex] = useState("");
   const [admins, setAdmins] = useState([]);
   const [availableDaysIndex, setavailableDaysIndex] = useState([]);
@@ -30,13 +34,23 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
     window.scrollTo({ top: 0, behavior: "instant" });
     if (!isUser()) handleApiLogin();
     if (isUser()) getAdminNames();
+
     if (isNormalUser()) getUserInfo();
   }, []);
+  const getPreSelectedAdmin = () => {
+    const adminId = searchParams.get("adminId");
+    if (adminId) {
+      setPreSelectedAdminId(adminId);
+
+      handleAdminSelect(adminRef.current);
+    }
+  };
   const getAdminNames = async () => {
     try {
       setIsLoading(true);
       const admins = await ReserveTimeService.getAdmins();
       setAdmins(admins);
+      getPreSelectedAdmin();
       setIsLoading(false);
     } catch (e) {
       alert(e.message);
@@ -55,13 +69,7 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
     const { id, value } = e.target;
     setCustomerDetails((prevState) => ({ ...prevState, [id]: value }));
   };
-  // async function paymentInfo() {
-  //   const { link: paymentLink, id: paymentId } = await idPayService.payment(
-  //     customerDetails.lastName
-  //   );
 
-  //   return { paymentId, paymentLink };
-  // }
   const handleSubmitReserve = async (e, checkedTime) => {
     e.preventDefault();
     const persianDate = convertedDate(selectedDate);
@@ -96,13 +104,16 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
       return;
     }
   };
-  const handleAdminSelect = async ({ target, currentTarget }) => {
+  const handleAdminSelect = async (e) => {
+    let target = e;
+    if (e.target) target = e.target;
+    console.log(e);
     const options = target.options;
     const index = target.selectedIndex;
+    console.log(index);
     const adminName = options[index].id;
     const adminEmail = options[index].value;
 
-    // const { value: adminEmail, id: adminName } = target;
     setSelectedAdmin({ email: adminEmail, name: adminName });
     const times = await ReserveTimeService.getReserveTime("adminTimes", {
       ownerEmail: adminEmail,
@@ -116,6 +127,7 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
       adminEmail,
     });
     setOccupiedDays(occupiedDays);
+
     setavailableDaysIndex(days);
     setSelectedDate("");
     setSelectedTime("");
@@ -219,10 +231,15 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
             <Form.Control value={customerDetails.lastName} />
           </Form.Group>
         </div>
-        <Form.Select className="mt-4 mb-4" onChange={handleAdminSelect}>
+        <Form.Select
+          className="mt-4 mb-4"
+          ref={adminRef}
+          onChange={handleAdminSelect}
+        >
           <option>choose your therapist</option>
           {admins.map((admin) => (
             <option
+              selected={admin._id == preSelectedAdminId}
               key={admin._id}
               id={`${admin.firstName} ${admin.lastName}`}
               value={admin.ownerEmail}
@@ -247,7 +264,7 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
                   style: { color: "red" },
                 };
             }}
-            minDate={Date.now()}
+            minDate={minDate}
             calendar={persian}
             locale={persian_fa}
             value={selectedDate}
