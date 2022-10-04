@@ -17,11 +17,24 @@ export function RadioButton({ id, name, label, error, ...rest }) {
     </div>
   );
 }
-export function Input({ id, type = " text", error, ...rest }) {
+export function Input({
+  id,
+  placeholder,
+  className,
+  type = " text",
+  error,
+  ...rest
+}) {
   return (
     <>
-      <label htmlFor={id}>{id}</label>
-      <input id={id} type={type} {...rest} className="form-control" />
+      {!placeholder && <label htmlFor={id}>{id}</label>}
+      <input
+        id={id}
+        type={type}
+        placeholder={placeholder}
+        {...rest}
+        className={"form-control " + className}
+      />
       {error && (
         <div className="alert alert-danger">
           <b>{error}</b>

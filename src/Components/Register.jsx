@@ -32,7 +32,7 @@ export default function Register() {
   }
 
   return (
-    <div>
+    <div className="container">
       <form onSubmit={handleRegister}>
         <div onChange={handleUserInfo}>
           <Input id="email" />

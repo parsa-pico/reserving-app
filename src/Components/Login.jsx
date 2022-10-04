@@ -33,13 +33,19 @@ export default function Login() {
     }));
   }
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div disabled={LoadingState.isLoading} onChange={handleUserInfo}>
-          <Input id={"email"} />
-          <Input type="password" id={"password"} />
+    <div disabled={LoadingState.isLoading} className=" login-page">
+      <form className="login-form" onSubmit={handleSubmit}>
+        <h3>sign in</h3>
+        <div onChange={handleUserInfo}>
+          <Input className="login-inputs" placeholder="email" id={"email"} />
+          <Input
+            className="login-inputs"
+            placeholder="password"
+            type="password"
+            id={"password"}
+          />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary w-100">
           Login
         </button>
       </form>
