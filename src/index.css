@@ -15,7 +15,7 @@ html {
 }
 body {
   color: var(--body-color);
-  padding-top: 6rem;
+  /* padding-top: 6rem; */
 }
 #root {
   height: 100vh;
@@ -69,6 +69,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
 /* home page */
 #homePage {
   height: 100%;
@@ -305,7 +306,7 @@ code {
 /* login Form */
 .login-page {
   display: flex;
-  height: 100vh;
+  height: 90vh;
   align-items: center;
   justify-content: center;
   width: 100%;

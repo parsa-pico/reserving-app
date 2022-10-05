@@ -10,11 +10,16 @@ export default function Home({ isLoading }) {
   const LoadingState = useContext(LoadingContext);
   async function handleApiLogin() {
     const credentials = Realm.Credentials.apiKey(process.env.REACT_APP_API_KEY);
-    LoadingState.setIsLoading(true);
-    await app.logIn(credentials);
-    LoadingState.setIsLoading(false);
-    console.log("api login");
-    window.location = "/";
+    try {
+      LoadingState.setGeneralSpinner(true);
+      await app.logIn(credentials);
+      LoadingState.setGeneralSpinner(false);
+      console.log("api login");
+      window.location = "/";
+    } catch (error) {
+      alert(error.message);
+      LoadingState.setGeneralSpinner(false);
+    }
   }
   useEffect(() => {
     if (!isUser()) handleApiLogin();

@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function LodingSpinner() {
+export default function LoadingSpinner() {
   return <div className="loading-spinner"></div>;
 }

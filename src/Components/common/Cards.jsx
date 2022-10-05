@@ -10,13 +10,13 @@ export default function Cards() {
 
   async function getAdmins() {
     try {
-      LoadingState.setIsLoading(true);
+      LoadingState.setGeneralSpinner(true);
       const result = await ReserveTimeService.getAdmins();
       setAdmins(result);
-      LoadingState.setIsLoading(false);
+      LoadingState.setGeneralSpinner(false);
     } catch (error) {
       if (isUser()) alert(error);
-      LoadingState.setIsLoading(false);
+      LoadingState.setGeneralSpinner(false);
     }
   }
 

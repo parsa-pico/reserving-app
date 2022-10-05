@@ -10,7 +10,7 @@ export default function NavBarComponent() {
   const location = useLocation();
   const user = app.currentUser;
   return (
-    <Navbar className="fs-5" bg="light" expand="lg" fixed="top">
+    <Navbar className="fs-5 " bg="light" expand="lg" sticky="top">
       <Container>
         <Navbar.Brand className="fs-3" href="/">
           Reserving app

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { RadioButton, Input } from "./common/Inputs";
 import { app } from "./realmConfig";
@@ -8,6 +8,7 @@ import DatePicker, { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import idPayService from "./services/idPayService";
+import LoadingContext from "./context/LoadingContext";
 import { isNormalUser, isServerUser, isUser } from "./common/UserControl";
 import Form from "react-bootstrap/Form";
 import { ReserveBtn } from "./ReserveBoxComponents";
@@ -15,9 +16,10 @@ import realmService from "./services/realmService";
 import LodingSpinner from "./common/LodingSpinner";
 const userCustomDataCollection = "userCustomData";
 // TODO:finding occupied days is very nasti,fix that
-export default function ReserveBox({ isLoading, setIsLoading }) {
+export default function ReserveBox() {
   let minDate = new Date();
   minDate = minDate.setDate(minDate.getDate() + 1);
+  const LoadingState = useContext(LoadingContext);
   const adminRef = useRef();
   const [searchParams] = useSearchParams();
   const [preSelectedAdminId, setPreSelectedAdminId] = useState("");
@@ -47,14 +49,14 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
   };
   const getAdminNames = async () => {
     try {
-      setIsLoading(true);
+      LoadingState.setGeneralSpinner(true);
       const admins = await ReserveTimeService.getAdmins();
       setAdmins(admins);
       getPreSelectedAdmin();
-      setIsLoading(false);
+      LoadingState.setGeneralSpinner(false);
     } catch (e) {
       alert(e.message);
-      setIsLoading(false);
+      LoadingState.setGeneralSpinner(false);
     }
   };
   async function getUserInfo() {
@@ -72,12 +74,13 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
 
   const handleSubmitReserve = async (e, checkedTime) => {
     e.preventDefault();
+    LoadingState.setIsLoading(true);
     const persianDate = convertedDate(selectedDate);
     try {
       const { paymentId, paymentLink } = await idPayService.payment(
         customerDetails.lastName
       );
-      setIsLoading(true);
+
       await ReserveTimeService.insertNewTime({
         ...customerDetails,
         adminName: selectedAdmin.name,
@@ -96,11 +99,11 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
           adminEmail: selectedAdmin.email,
         });
       window.location.replace(paymentLink);
-      setIsLoading(false);
+      LoadingState.setIsLoading(false);
     } catch (e) {
       console.log(e);
       alert(e);
-      setIsLoading(false);
+      LoadingState.setIsLoading(false);
       return;
     }
   };
@@ -171,19 +174,19 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
   }
   async function handleDateSelect(date) {
     try {
-      setIsLoading(true);
+      LoadingState.setGeneralSpinner(true);
       const times = await AvailableTimes(
         adminTimes,
         selectedAdmin.email,
         convertedDate(date)
       );
-      setIsLoading(false);
+      LoadingState.setGeneralSpinner(false);
       setSelectedDayIndex(date.weekDay.index.toString());
       setAdminTimes(times);
       setSelectedDate(date);
     } catch (error) {
       alert(error.message);
-      setIsLoading(false);
+      LoadingState.setGeneralSpinner(false);
     }
   }
   async function isDayOccupied(persianDate) {
@@ -219,7 +222,10 @@ export default function ReserveBox({ isLoading, setIsLoading }) {
   }
 
   return (
-    <div disabled={isLoading} className="container reserve-box ">
+    <div
+      disabled={LoadingState.generalSpinner}
+      className="container reserve-box "
+    >
       <Form onSubmit={(e) => handleSubmitReserve(e, selectedTime)}>
         <div onChange={handleCustomerDetails}>
           <Form.Group controlId="firstName">

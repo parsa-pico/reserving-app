@@ -19,10 +19,13 @@ import PaymentCallback from "./Components/callbacks/PaymentCallback";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
+  const [generalSpinner, setGeneralSpinner] = useState(false);
   return (
     <>
-      <LoadingContext.Provider value={{ isLoading, setIsLoading }}>
-        {isLoading && <LodingSpinner />}
+      <LoadingContext.Provider
+        value={{ isLoading, setIsLoading, generalSpinner, setGeneralSpinner }}
+      >
+        {generalSpinner && <LodingSpinner />}
         <NavBar />
         <Routes>
           <Route path="/" element={<Home isLoading={isLoading} />} />
@@ -34,12 +37,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/reserving"
-            element={
-              <ReserveBox isLoading={isLoading} setIsLoading={setIsLoading} />
-            }
-          />
+          <Route path="/reserving" element={<ReserveBox />} />
           <Route path="login" element={<Login />} />
           <Route path="logout" element={<LogOut />} />
           <Route path="register" element={<Register />} />
