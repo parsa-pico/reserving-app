@@ -20,6 +20,11 @@ export default function NavBarComponent() {
           <Nav className="me-auto">
             <ul className="navbar-nav p-1">
               <li className="nav-item">
+                <NavLink className="nav-link" to="/therapists">
+                  therapists
+                </NavLink>
+              </li>
+              <li className="nav-item">
                 <NavLink className="nav-link" to="/reserving">
                   reserving page
                 </NavLink>

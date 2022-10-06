@@ -141,7 +141,7 @@ code {
   flex-direction: column;
   border-left: none;
   border-right: none;
-  border-bottom: none;
+  /* border-bottom: none; */
   border-radius: 0;
 }
 .card__btn {
@@ -212,13 +212,18 @@ code {
     rgba(63, 94, 251, 1) 0%,
     rgba(252, 70, 70, 1) 100%
   );
-  padding: 0.5rem;
+  padding: 0.4rem;
 }
 .card--expanded .card__image {
   background: none;
 }
 .card--expanded .card__line {
   display: none;
+}
+@media screen and (min-width: 768px) {
+  .card {
+    border: 1px solid rgba(0, 0, 0, 0.175);
+  }
 }
 @media screen and (min-width: 1024px) {
   .card {
