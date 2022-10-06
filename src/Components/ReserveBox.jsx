@@ -267,7 +267,7 @@ export default function ReserveBox() {
               if (!isAvailable || isOccupied)
                 return {
                   disabled: true,
-                  style: { color: "red" },
+                  style: { color: "#8798ad" },
                 };
             }}
             minDate={minDate}
