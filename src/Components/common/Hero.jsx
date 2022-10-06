@@ -8,7 +8,7 @@ export default function Hero() {
     navigate("/reserving");
   }
   return (
-    <div className="hero">
+    <section className="hero">
       <header className="hero__header">
         <h1 className="hero__heading">EVERY ONE NEEDS TO BE HEARD</h1>
         <Button
@@ -19,6 +19,6 @@ export default function Hero() {
           Reserve Now
         </Button>
       </header>
-    </div>
+    </section>
   );
 }

@@ -14,10 +14,11 @@ import Profile from "./Components/Profile";
 import Home from "./Components/Home";
 import LodingSpinner from "./Components/common/LodingSpinner";
 import { isAdmin, isNormalUser } from "./Components/common/UserControl";
-import "./App.css";
 import PaymentCallback from "./Components/callbacks/PaymentCallback";
 import Footer from "./Components/Footer";
 import Push from "./Components/common/Push";
+import Therapists from "./Components/Therapists";
+import "./App.css";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +53,9 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="therapists" element={<Therapists />} />
           <Route path="payments/callback" element={<PaymentCallback />} />
+
           <Route path="notFound" element={<NotFound />} />
           <Route path="*" element={<Navigate to="notFound" />} />
         </Routes>
