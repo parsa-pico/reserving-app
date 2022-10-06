@@ -24,17 +24,11 @@ export default function Home({ isLoading }) {
   useEffect(() => {
     if (!isUser()) handleApiLogin();
   }, []);
-  function renderCards() {
-    // setTimeout(() => {}, 1000);
 
-    // if (LoadingState.isLoading === false)
-    return <Cards />;
-    return;
-  }
   return (
     <div id="homePage">
       <Hero />
-      {renderCards()}
+      <Cards />
     </div>
   );
 }
