@@ -16,6 +16,7 @@ import LodingSpinner from "./Components/common/LodingSpinner";
 import { isAdmin, isNormalUser } from "./Components/common/UserControl";
 import "./App.css";
 import PaymentCallback from "./Components/callbacks/PaymentCallback";
+import Footer from "./Components/Footer";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -55,6 +56,7 @@ function App() {
           <Route path="*" element={<Navigate to="notFound" />} />
         </Routes>
       </LoadingContext.Provider>
+      <Footer />
     </>
   );
 }
