@@ -18,7 +18,6 @@ body {
   /* padding-top: 6rem; */
 }
 #root {
-  height: 100vh;
 }
 
 div[disabled] {
@@ -69,9 +68,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
+.push {
+  height: 9rem;
+}
 /* home page */
-#homePage {
+#home-page {
   height: 100%;
 }
 /* Hero */
@@ -174,7 +175,7 @@ code {
   color: white;
 }
 .card__reserve-btn {
-  font-size: 1.8rem;
+  font-size: 1.2rem;
 }
 .card__details {
   margin-top: 1.5rem;
@@ -254,6 +255,9 @@ code {
   .grid--1x2 {
     grid-template-columns: 1fr 1fr;
   }
+  .grid--1x3 {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 @media screen and (min-width: 1024px) {
   .grid--1x3 {
@@ -325,6 +329,8 @@ code {
 /* footer */
 .footer {
   background-color: #232323;
+
+  width: 100%;
 }
 
 .footer .list {

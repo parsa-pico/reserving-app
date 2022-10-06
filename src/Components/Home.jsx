@@ -26,7 +26,7 @@ export default function Home({ isLoading }) {
   }, []);
 
   return (
-    <div id="homePage">
+    <div id="home-page">
       <Hero />
       <Cards />
     </div>

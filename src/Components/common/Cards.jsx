@@ -38,9 +38,9 @@ export default function Cards() {
           />
         ))}
       </div>
-      <button className="btn btn-primary w-100 fs-5">
+      {/* <button className="btn btn-primary w-100 fs-5">
         <b>Show all therapists</b>
-      </button>
+      </button> */}
     </Container>
   );
 }
