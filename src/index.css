@@ -42,6 +42,7 @@ h5,
 h6 {
   font-family: "Roboto", sans-serif;
   color: var(--headers-color);
+  text-align: center;
 }
 h1 {
   font-size: 5rem;
@@ -158,6 +159,9 @@ code {
     opacity: 1;
   }
 }
+.card__heading {
+  font-size: 3rem;
+}
 .card__close-btn {
   display: none;
   position: absolute;
@@ -221,6 +225,9 @@ code {
   display: none;
 }
 @media screen and (min-width: 768px) {
+  .card__heading {
+    font-size: 6rem;
+  }
   .card {
     border: 1px solid rgba(0, 0, 0, 0.175);
   }

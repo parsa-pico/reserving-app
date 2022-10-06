@@ -43,7 +43,7 @@ export default function Cards() {
     <section>
       <Container className="cards__container">
         <header>
-          <h1>Choose your therapist</h1>
+          <h1 className="card__heading">Choose your therapist</h1>
         </header>
         <div className={"grid grid--1x3 cards "}>
           {admins.map((admin) => (
