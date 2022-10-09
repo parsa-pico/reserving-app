@@ -7,6 +7,7 @@ import Alert from "react-bootstrap/Alert";
 export default function PaymentCallback() {
   const loadingState = useContext(LoadingContext);
   const [searchParmas] = useSearchParams();
+  const [isBtnClicked, setIsBtnClicked] = useState(false);
   const [verifyCountDown, setVerifyCountDown] = useState(10);
   const [paymentDetails, setPaymentDetails] = useState();
   const [paymentStatus, setPaymentStatus] = useState(null);
@@ -22,11 +23,11 @@ export default function PaymentCallback() {
   }, []);
 
   useEffect(() => {
-    if (verifyCountDown !== 0)
+    if (verifyCountDown !== 0 && !isBtnClicked)
       setTimeout(() => {
         setVerifyCountDown(verifyCountDown - 1);
       }, 1000);
-    else handleVerify();
+    else if (!isBtnClicked) handleVerify();
   }, [verifyCountDown]);
 
   async function handleVerify() {
@@ -38,8 +39,8 @@ export default function PaymentCallback() {
         paymentDetails.track_id
       );
       if (result.response && result.response.status !== 200) {
-        throw new Error();
         console.log(result);
+        throw new Error();
       }
       setPaymentStatus(true);
       loadingState.setIsLoading(false);
@@ -52,8 +53,14 @@ export default function PaymentCallback() {
 
   return (
     <div className="container verify-callback">
-      <LoadingButton className="verify-callback__btn" onClick={handleVerify}>
-        verify {verifyCountDown !== 0 && verifyCountDown}
+      <LoadingButton
+        className="verify-callback__btn"
+        onClick={() => {
+          setIsBtnClicked(true);
+          handleVerify();
+        }}
+      >
+        verify {verifyCountDown !== 0 && !isBtnClicked && verifyCountDown}
       </LoadingButton>
 
       {paymentStatus !== null && (
