@@ -5,7 +5,7 @@ import doctor1 from "../../images/doctorImages/doctor1.webp";
 import { useNavigate } from "react-router-dom";
 export default function Card({ fullName, image, adminId }) {
   const navigate = useNavigate();
-  const baseCardClass = "card text-center p-5";
+  const baseCardClass = "card text-center p-3";
   const expandedCardClass = baseCardClass + " card--expanded";
   const [cardClass, setCardClass] = useState(baseCardClass);
 

@@ -210,7 +210,7 @@ code {
 
 .card__image {
   cursor: pointer;
-  width: 150px;
+  max-width: 120px;
   background: rgb(63, 94, 251);
   background: linear-gradient(
     90deg,
@@ -228,6 +228,9 @@ code {
 @media screen and (min-width: 768px) {
   .card__heading {
     font-size: 6rem;
+  }
+  .card__image {
+    max-width: 150px;
   }
   .card {
     border: 1px solid rgba(0, 0, 0, 0.175);
