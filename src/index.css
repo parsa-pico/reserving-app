@@ -193,7 +193,6 @@ code {
 .card--expanded .card__title,
 .card__details-header {
   color: white;
-  text-align: left;
 }
 .card__reserve-btn {
   font-size: 1.2rem;
@@ -203,6 +202,7 @@ code {
 }
 .card__details-header {
   color: #b4b4b4;
+  text-align: left;
 }
 .card__line {
   margin-left: 2rem;

@@ -33,7 +33,6 @@ export default function ReserveBox() {
   const [selectedAdmin, setSelectedAdmin] = useState("");
   const [occupiedDays, setOccupiedDays] = useState([]);
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
     if (!isUser()) handleApiLogin();
     if (isUser()) getAdminNames();
 

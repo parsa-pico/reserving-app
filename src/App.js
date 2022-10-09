@@ -18,6 +18,7 @@ import PaymentCallback from "./Components/callbacks/PaymentCallback";
 import Footer from "./Components/Footer";
 import Push from "./Components/common/Push";
 import Therapists from "./Components/Therapists";
+import ScrollToTop from "./Components/common/ScrollToTop";
 import "./App.css";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
   const [generalSpinner, setGeneralSpinner] = useState(false);
   return (
     <>
+      <ScrollToTop />
       <LoadingContext.Provider
         value={{ isLoading, setIsLoading, generalSpinner, setGeneralSpinner }}
       >
