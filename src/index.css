@@ -70,7 +70,7 @@ code {
     monospace;
 }
 .push {
-  height: 9rem;
+  height: 50vh;
 }
 /* home page */
 #home-page {
@@ -193,6 +193,7 @@ code {
 .card--expanded .card__title,
 .card__details-header {
   color: white;
+  text-align: left;
 }
 .card__reserve-btn {
   font-size: 1.2rem;
@@ -524,4 +525,30 @@ ul {
 }
 .icon-container--accent {
   background-color: var(--color-accent);
+}
+/*verify callback */
+.verify-callback {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.verify-callback__btn {
+  width: auto !important;
+  font-size: 1rem;
+}
+.verify-callback__alert {
+  white-space: pre-line;
+  width: 100%;
+  text-align: center;
+}
+@media screen and (min-width: 1024px) {
+  .verify-callback__btn {
+    font-size: 1.5rem;
+    width: 40% !important;
+  }
+  .verify-callback__alert {
+    font-size: 2rem;
+  }
 }

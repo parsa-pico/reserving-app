@@ -6,6 +6,7 @@ async function payment(name) {
     orderId.toString(),
     name
   );
+  console.log(result);
   const { id: paymentId, link: paymentLink } = result.data;
   return { paymentId, paymentLink };
 }

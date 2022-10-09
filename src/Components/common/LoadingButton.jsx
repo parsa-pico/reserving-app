@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import Spinner from "react-bootstrap/Spinner";
+import LoadingContext from "../context/LoadingContext";
+
 export default function LoadingButton({
   children,
   disabled,
@@ -8,6 +10,9 @@ export default function LoadingButton({
   type = "submit",
   ...rest
 }) {
+  const loadingState = useContext(LoadingContext);
+  if (!disabled) disabled = loadingState.isLoading;
+  if (!spinner) spinner = loadingState.isLoading;
   return (
     <button
       {...rest}
