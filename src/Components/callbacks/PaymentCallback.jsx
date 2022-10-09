@@ -42,6 +42,7 @@ export default function PaymentCallback() {
         console.log(result);
         throw new Error();
       }
+      console.log(result);
       setPaymentStatus(true);
       loadingState.setIsLoading(false);
     } catch (error) {
