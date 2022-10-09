@@ -20,7 +20,7 @@ export default function ReserveBox() {
   let minDate = new Date();
   minDate = minDate.setDate(minDate.getDate() + 1);
   const LoadingState = useContext(LoadingContext);
-  const adminRef = useRef();
+  const adminsRef = useRef();
   const [searchParams] = useSearchParams();
   const [preSelectedAdminId, setPreSelectedAdminId] = useState("");
   const [customerDetails, setCustomerDetails] = useState({});
@@ -42,8 +42,10 @@ export default function ReserveBox() {
     const adminId = searchParams.get("adminId");
     if (adminId) {
       setPreSelectedAdminId(adminId);
-
-      handleAdminSelect(adminRef.current);
+      // FIXME: instead of setting time out,find out why selected admin doesnt work without delay
+      setTimeout(() => {
+        handleAdminSelect(adminsRef.current);
+      }, 1);
     }
   };
   const getAdminNames = async () => {
@@ -109,7 +111,7 @@ export default function ReserveBox() {
   const handleAdminSelect = async (e) => {
     let target = e;
     if (e.target) target = e.target;
-    console.log(e);
+    console.log(target.value);
     const options = target.options;
     const index = target.selectedIndex;
     console.log(index);
@@ -238,7 +240,7 @@ export default function ReserveBox() {
         </div>
         <Form.Select
           className="mt-4 mb-4"
-          ref={adminRef}
+          ref={adminsRef}
           onChange={handleAdminSelect}
         >
           <option>choose your therapist</option>
