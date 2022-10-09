@@ -119,23 +119,30 @@ export default function ReserveBox() {
     const adminEmail = options[index].value;
 
     setSelectedAdmin({ email: adminEmail, name: adminName });
-    const times = await ReserveTimeService.getReserveTime("adminTimes", {
-      ownerEmail: adminEmail,
-    });
-    let days = [];
-    for (let value of times) {
-      if (!days.find((day) => day == value.dayIndex))
-        days = [...days, value.dayIndex];
-    }
-    const occupiedDays = await realmService.find("occupiedDays", {
-      adminEmail,
-    });
-    setOccupiedDays(occupiedDays);
+    try {
+      LoadingState.setGeneralSpinner(true);
+      const times = await ReserveTimeService.getReserveTime("adminTimes", {
+        ownerEmail: adminEmail,
+      });
+      let days = [];
+      for (let value of times) {
+        if (!days.find((day) => day == value.dayIndex))
+          days = [...days, value.dayIndex];
+      }
+      const occupiedDays = await realmService.find("occupiedDays", {
+        adminEmail,
+      });
+      setOccupiedDays(occupiedDays);
 
-    setavailableDaysIndex(days);
-    setSelectedDate("");
-    setSelectedTime("");
-    setAdminTimes(times);
+      setavailableDaysIndex(days);
+      setSelectedDate("");
+      setSelectedTime("");
+      setAdminTimes(times);
+      LoadingState.setGeneralSpinner(false);
+    } catch (e) {
+      LoadingState.setGeneralSpinner(false);
+      alert(e);
+    }
   };
 
   async function AvailableTimes(timesObj, adminProperty, date) {
