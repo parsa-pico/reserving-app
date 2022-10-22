@@ -146,20 +146,23 @@ export default function ReserveBox() {
   };
 
   async function AvailableTimes(timesObj, adminProperty, date) {
-    const times = await Promise.all(
-      timesObj.map(async (timeObj) => {
-        const found = await ReserveTimeService.findOne({
-          time: timeObj.value,
-          adminEmail: adminProperty,
-          date,
-        });
-        if (!found) return { ...timeObj, isChecked: false };
+    try {
+      const times = await Promise.all(
+        timesObj.map(async (timeObj) => {
+          const found = await ReserveTimeService.findOne({
+            time: timeObj.value,
+            adminEmail: adminProperty,
+            date,
+          });
+          if (!found) return { ...timeObj, isChecked: false };
 
-        return { ...timeObj, isChecked: true };
-      })
-    );
-
-    return times;
+          return { ...timeObj, isChecked: true };
+        })
+      );
+      return times;
+    } catch (e) {
+      alert(e.message);
+    }
   }
   function convertedDate(dateObj) {
     let { day, year } = dateObj;
