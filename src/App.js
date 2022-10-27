@@ -20,6 +20,7 @@ import Push from "./Components/common/Push";
 import Therapists from "./Components/Therapists";
 import ScrollToTop from "./Components/common/ScrollToTop";
 import "./App.css";
+import Playground from "./playground/Playground";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -42,6 +43,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/playground" element={<Playground />} />
           <Route path="/reserving" element={<ReserveBox />} />
           <Route path="login" element={<Login />} />
           <Route path="logout" element={<LogOut />} />
